@@ -17,21 +17,18 @@ export default defineConfig(({mode}) => {
       },
     },
     build: {
-      // Increase the limit to 2000kB to accommodate large AI libraries like @google/genai
-      chunkSizeWarningLimit: 2000,
+      // This splits large libraries into separate files so the main page loads faster
       rollupOptions: {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              if (id.includes('@google/genai')) return 'vendor-ai';
-              if (id.includes('motion') || id.includes('framer-motion')) return 'vendor-motion';
-              if (id.includes('lucide-react')) return 'vendor-icons';
-              if (id.includes('react')) return 'vendor-react';
-              return 'vendor-others';
+              return id.toString().split('node_modules/')[1].split('/')[0].toString();
             }
           },
         },
       },
+      // This increases the warning limit to 1000kB to clear the Vercel alert
+      chunkSizeWarningLimit: 1000,
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
