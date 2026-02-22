@@ -5,7 +5,9 @@ import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
-  const apiKey = env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+  // Robust detection: check VITE_ prefix first (Vercel), then standard, then system env
+  const apiKey = env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
+  
   return {
     plugins: [react(), tailwindcss()],
     define: {
