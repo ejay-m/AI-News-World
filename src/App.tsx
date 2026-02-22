@@ -126,45 +126,101 @@ const BreakingNews = () => (
   </div>
 );
 
-const ArticleCard = ({ article, onSummarize }: { article: NewsArticle, onSummarize: (a: NewsArticle) => void }) => (
-  <motion.div 
-    layout
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    whileHover={{ scale: 1.02 }}
-    className="group cursor-pointer"
-    onClick={() => onSummarize(article)}
-  >
-    <div className="relative overflow-hidden rounded-xl aspect-[4/3] mb-3">
-      <img 
-        src={article.imageUrl} 
-        alt={article.title}
-        className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
-        referrerPolicy="no-referrer"
-      />
-      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-        <button className="bg-white text-brand-dark px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-          Read More
-        </button>
+const ArticleCard = ({ article, onSummarize }: { article: NewsArticle, onSummarize: (a: NewsArticle) => void }) => {
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [authData, setAuthData] = useState<any>(null);
+
+  const handleVerify = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAnalyzing(true);
+    try {
+      const data = await geminiService.detectFakeNews(article.content);
+      setAuthData(data);
+    } catch (error) {
+      console.error("Verification failed", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  return (
+    <motion.div 
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      className="group cursor-pointer bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition-all"
+      onClick={() => onSummarize(article)}
+    >
+      <div className="relative overflow-hidden rounded-xl aspect-[4/3] mb-4">
+        <img 
+          src={article.imageUrl} 
+          alt={article.title}
+          className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
+          <button className="bg-white text-brand-dark px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            Read More
+          </button>
+          <button 
+            onClick={handleVerify}
+            disabled={isAnalyzing}
+            className="bg-brand-orange text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-1"
+          >
+            {isAnalyzing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <ShieldCheck className="w-3 h-3" />}
+            Verify
+          </button>
+        </div>
+        <div className="absolute top-3 left-3">
+          <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase">
+            {article.category}
+          </span>
+        </div>
       </div>
-      <div className="absolute top-3 left-3">
-        <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase">
-          {article.category}
-        </span>
+
+      <div className="space-y-3">
+        <h3 className="text-lg font-bold leading-tight group-hover:text-brand-orange transition-colors">
+          {article.title}
+        </h3>
+        
+        <AnimatePresence>
+          {authData && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className={cn(
+                "p-3 rounded-xl border text-[10px] font-medium leading-relaxed mb-2",
+                authData.score > 70 ? "bg-green-50 border-green-100 text-green-800" : "bg-red-50 border-red-100 text-red-800"
+              )}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-bold uppercase tracking-tighter flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3" /> Authenticity: {authData.score}%
+                </span>
+              </div>
+              <p className="line-clamp-2 mb-2">{authData.reasoning}</p>
+              <div className="flex flex-wrap gap-1">
+                {authData.sources?.slice(0, 2).map((s: string) => (
+                  <span key={s} className="bg-white/50 px-1.5 py-0.5 rounded border border-current/10">{s}</span>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <p className="text-xs text-gray-500 line-clamp-2">
+          {article.content}
+        </p>
+        
+        <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter pt-2 border-t border-gray-50">
+          <span>{article.author}</span>
+          <span>{article.date}</span>
+        </div>
       </div>
-    </div>
-    <h3 className="text-lg font-bold leading-tight mb-2 group-hover:text-brand-orange transition-colors">
-      {article.title}
-    </h3>
-    <p className="text-xs text-gray-500 line-clamp-2 mb-3">
-      {article.content}
-    </p>
-    <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
-      <span>{article.author}</span>
-      <span>{article.date}</span>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 const FakeNewsDetector = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
