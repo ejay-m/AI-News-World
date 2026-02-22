@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <circle cx="256" cy="128" r="96" fill="black"/>
+  <path d="M480 304c0-17.7-14.3-32-32-32H320c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h128c17.7 0 32-14.3 32-32V304z" fill="white" stroke="black" stroke-width="16"/>
+  <path d="M32 304c0-17.7 14.3-32 32-32h128c17.7 0 32 14.3 32 32v160c0 17.7-14.3 32-32 32H64c-17.7 0-32-14.3-32-32V304z" fill="white" stroke="black" stroke-width="16"/>
+  <path d="M256 256c-80 0-160 40-160 120v80h320v-80c0-80-80-120-160-120z" fill="black"/>
+  <rect x="240" y="256" width="32" height="208" fill="black"/>
+  <g fill="black">
+    <rect x="64" y="320" width="96" height="8"/>
+    <rect x="64" y="344" width="96" height="8"/>
+    <rect x="64" y="368" width="96" height="8"/>
+    <rect x="64" y="392" width="96" height="8"/>
+    <rect x="64" y="416" width="96" height="8"/>
+    
+    <text x="300" y="350" font-family="Arial, sans-serif" font-weight="bold" font-size="32">NEWS</text>
+    <rect x="300" y="370" width="140" height="8"/>
+    <rect x="300" y="394" width="140" height="8"/>
+    <rect x="300" y="418" width="140" height="8"/>
+  </g>
+</svg>
