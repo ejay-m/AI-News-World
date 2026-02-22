@@ -17,13 +17,17 @@ export default defineConfig(({mode}) => {
       },
     },
     build: {
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 2000,
       rollupOptions: {
         output: {
-          manualChunks: {
-            'vendor-ai': ['@google/genai'],
-            'vendor-react': ['react', 'react-dom'],
-            'vendor-ui': ['motion', 'lucide-react'],
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('@google/genai')) return 'vendor-ai';
+              if (id.includes('motion') || id.includes('framer-motion')) return 'vendor-motion';
+              if (id.includes('lucide-react')) return 'vendor-icons';
+              if (id.includes('react')) return 'vendor-react';
+              return 'vendor-others';
+            }
           },
         },
       },
