@@ -1,0 +1,7 @@
+{
+  "name": "AI News World",
+  "description": "An AI-powered e-newspaper featuring smart summarization, fake news detection, and regional editions.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
