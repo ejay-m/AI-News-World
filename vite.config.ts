@@ -17,6 +17,7 @@ export default defineConfig(({mode}) => {
       },
     },
     build: {
+      // Increase the limit to 2000kB to accommodate large AI libraries like @google/genai
       chunkSizeWarningLimit: 2000,
       rollupOptions: {
         output: {
