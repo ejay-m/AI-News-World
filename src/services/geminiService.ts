@@ -1,11 +1,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-// The API key is injected via Vite's 'define' feature in vite.config.ts
-// It will check for VITE_GEMINI_API_KEY, GEMINI_API_KEY, and system env
-const API_KEY = process.env.GEMINI_API_KEY || "";
+// This MUST match the name VITE_GEMINI_API_KEY exactly
+const API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
 
 if (!API_KEY) {
-  console.error("Gemini API Key is missing! Please set VITE_GEMINI_API_KEY in Vercel or GEMINI_API_KEY in your environment.");
+  console.error("API Key not found! Check your Vercel settings. Make sure it starts with VITE_.");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
