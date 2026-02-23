@@ -458,6 +458,24 @@ export interface NewsArticle {
 }
 
 export const geminiService = {
+  async chatWithNews(message: string, newsContext: NewsArticle[]): Promise<string> {
+    const context = newsContext.map(a => `Title: ${a.title}\nContent: ${a.content.substring(0, 300)}...`).join('\n\n');
+    
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `You are an AI News Assistant for "AI NEWS WORLD". 
+      Below is the context of current news articles available in the app:
+      
+      ${context}
+      
+      User Question: ${message}
+      
+      Answer the user's question based on the provided news context and the app's functionality (summarizing news, fake news detection, exam mode). If the question is not related to the news or the app, politely guide them back. Keep responses concise and helpful.`,
+    });
+
+    return response.text || "I'm sorry, I couldn't process that request.";
+  },
+
   async generateNews(category: string = "General"): Promise<NewsArticle[]> {
     const cacheKey = `news_${category}`;
     const cached = cache.get(cacheKey);
