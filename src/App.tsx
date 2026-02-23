@@ -22,7 +22,8 @@ import {
   GraduationCap,
   MapPin,
   Trophy,
-  Clock
+  Clock,
+  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -1125,17 +1126,26 @@ const SportsPage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (
 };
 
 const LifestylePage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (a: NewsArticle) => void }) => {
+  // Separate static news from dynamic news
+  const staticLifestyle = news.filter(a => a.id.startsWith('life-'));
+  const dynamicLifestyle = news.filter(a => !a.id.startsWith('life-'));
+  
+  const heroArticle = dynamicLifestyle[0] || staticLifestyle[0] || news[0];
+  const otherNews = news.filter(a => a.id !== heroArticle?.id);
+
   return (
     <div className="space-y-12">
-      <section className="relative h-[500px] rounded-3xl overflow-hidden group cursor-pointer" onClick={() => onSummarize(news[0])}>
-        <img src={news[0]?.imageUrl} className="absolute inset-0 w-full h-full object-cover" referrerPolicy="no-referrer" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 p-12">
-          <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">Travel</span>
-          <h1 className="text-5xl text-white mb-4 leading-tight max-w-2xl">The 10 Best Hidden Getaways for 2024</h1>
-          <p className="text-white/80 text-lg max-w-xl">Escape the crowds and rediscover tranquility in these hand-picked destinations across the globe.</p>
-        </div>
-      </section>
+      {heroArticle && (
+        <section className="relative h-[500px] rounded-3xl overflow-hidden group cursor-pointer" onClick={() => onSummarize(heroArticle)}>
+          <img src={heroArticle.imageUrl} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 p-12 w-full">
+            <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">{heroArticle.category}</span>
+            <h1 className="text-5xl text-white mb-4 leading-tight max-w-2xl font-bold group-hover:text-brand-orange transition-colors">{heroArticle.title}</h1>
+            <p className="text-white/80 text-lg max-w-xl line-clamp-2">{heroArticle.content}</p>
+          </div>
+        </section>
+      )}
 
       <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
         {['All Stories', 'Health & Wellness', 'Travel', 'Food & Dining', 'Culture'].map((s, i) => (
@@ -1148,34 +1158,43 @@ const LifestylePage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize
         ))}
       </div>
 
+      {/* Permanent Lifestyle Updates Section */}
+      {staticLifestyle.length > 0 && (
+        <section className="bg-stone-50 rounded-3xl p-10 border border-stone-200">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold uppercase tracking-tighter flex items-center gap-3 text-brand-dark">
+              <Sparkles className="text-brand-orange w-8 h-8" /> Lifestyle Permanent Updates
+            </h2>
+            <div className="h-px flex-1 bg-stone-200 mx-8 hidden md:block"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {staticLifestyle.map((a) => (
+              <div 
+                key={a.id} 
+                className="group cursor-pointer border-l-2 border-brand-orange/30 pl-6 hover:border-brand-orange transition-all"
+                onClick={() => onSummarize(a)}
+              >
+                <h3 className="text-xl font-bold mb-3 text-brand-dark group-hover:text-brand-orange transition-colors">{a.title}</h3>
+                <p className="text-stone-600 text-sm leading-relaxed line-clamp-3 mb-4">{a.content}</p>
+                <button className="text-[10px] font-bold uppercase tracking-widest text-brand-orange flex items-center gap-2">
+                  Read Detail Explanation <ChevronRight className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-12">
           <section>
             <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-8">
-              <h2 className="text-2xl uppercase tracking-tighter">Health & Wellness</h2>
+              <h2 className="text-2xl uppercase tracking-tighter">Latest Lifestyle News</h2>
               <button className="text-brand-orange text-[10px] font-bold uppercase">View All</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {news.slice(1, 5).map(a => (
+              {otherNews.filter(a => !a.id.startsWith('life-')).slice(0, 6).map(a => (
                 <ArticleCard key={a.id} article={a} onSummarize={onSummarize} />
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-8">
-              <h2 className="text-2xl uppercase tracking-tighter">Food & Dining</h2>
-              <button className="text-brand-orange text-[10px] font-bold uppercase">View All</button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {news.slice(5).map(a => (
-                <div key={a.id} className="relative h-80 rounded-2xl overflow-hidden group cursor-pointer" onClick={() => onSummarize(a)}>
-                  <img src={a.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all"></div>
-                  <div className="absolute bottom-0 left-0 p-6">
-                    <h3 className="text-xl text-white font-bold">{a.title}</h3>
-                  </div>
-                </div>
               ))}
             </div>
           </section>

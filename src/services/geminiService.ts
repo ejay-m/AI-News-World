@@ -309,6 +309,99 @@ const STATIC_POLITICAL_NEWS: NewsArticle[] = [
   }
 ];
 
+const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
+  {
+    id: "life-1",
+    title: "Travel: The New Language of Romance",
+    content: "New research from major travel platforms shows that in 2026, the \"six-pack\" has been replaced by the \"booked getaway\" as the ultimate romantic gesture. In India, confirmed holiday bookings have become a primary expression of love, with couples prioritizing experiential escapes over traditional gifts. This shift emphasizes shared memories and \"destination dating\" as the core of modern relationships.",
+    category: "Lifestyle",
+    author: "Travel Desk",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/romance/800/600"
+  },
+  {
+    id: "life-2",
+    title: "Wellness: From Intensity to \"Load Management\"",
+    content: "The fitness world is officially moving away from \"no pain, no gain\" culture. Today's wellness experts are highlighting Load Management, which focuses on how much physical and mental stress the body can handle before requiring recovery. Instead of pushing through exhaustion, the 2026 trend favors \"pain-aware movement\" and nervous system regulation to build long-term resilience.",
+    category: "Lifestyle",
+    author: "Wellness Bureau",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/fitness/800/600"
+  },
+  {
+    id: "life-3",
+    title: "Interior Design: The Rise of \"Scanditalia\"",
+    content: "A new aesthetic is dominating home décor: Scanditalia. This trend blends the functional, clean silhouettes of Scandinavian design with the bold, expressive textures of Italian style. Expect to see homes featuring warm palettes, sculptural furniture, and rich materials like reeded wood and fluted glass, creating spaces that are both serene and high-drama.",
+    category: "Lifestyle",
+    author: "Design Desk",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/interior/800/600"
+  },
+  {
+    id: "life-4",
+    title: "Health: Stem Cell Breakthrough for Diabetes",
+    content: "In major medical news today, researchers have reported a successful reversal of Type 2 Diabetes in patients using stem cell therapy. The treatment focuses on restoring the body's natural insulin production, offering a potential future where patients are no longer dependent on lifelong medication. This marks a massive leap in regenerative medicine for lifestyle-related diseases.",
+    category: "Lifestyle",
+    author: "Medical Bureau",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/diabetes/800/600"
+  },
+  {
+    id: "life-5",
+    title: "Digital Lifestyle: The AI Health Coach Era",
+    content: "The health coaching market is projected to skyrocket this year as AI-enabled tools become mainstream. Unlike basic fitness trackers, these new AI coaches provide real-time, personalized advice based on metabolic data and stress levels. They are being integrated into corporate wellness programs to help employees manage \"digital fatigue\" and prevent burnout before it happens.",
+    category: "Lifestyle",
+    author: "Tech Lifestyle",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/aicoach/800/600"
+  },
+  {
+    id: "life-6",
+    title: "Mindful Living: \"Analog Affection\"",
+    content: "As AI becomes more integrated into work, people are seeking \"Analog Affection\" in their personal lives. Hobbies like ceramics, film photography, and hand-knitting are seeing a massive resurgence. These activities are being embraced as \"quiet acts of resistance,\" where the goal is to create something imperfect and tangible in an increasingly digital world.",
+    category: "Lifestyle",
+    author: "Culture Desk",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/analog/800/600"
+  },
+  {
+    id: "life-7",
+    title: "Nutrition: The Heart-Healthy Power of Pomegranates",
+    content: "New clinical studies released today emphasize the cardiovascular benefits of pomegranate juice. Drinking it daily has been linked to improved blood flow and arterial health. Nutritionists are also recommending \"sprinkling cinnamon on fruits\" to help with blood sugar control, highlighting a return to simple, functional whole foods over complex supplements.",
+    category: "Lifestyle",
+    author: "Nutrition Bureau",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/pomegranate/800/600"
+  },
+  {
+    id: "life-8",
+    title: "Home Trends: The Return of the Game Parlor",
+    content: "Forget the \"home office\"—2026 is the year of the \"Players Only\" room. Interior designers are seeing a surge in requests for dedicated game parlors featuring mahjong tables, poker setups, and family shuffleboards. This trend reflects a post-digital desire for communal, face-to-face entertainment within the comfort of the home.",
+    category: "Lifestyle",
+    author: "Home Bureau",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/gameparlor/800/600"
+  },
+  {
+    id: "life-9",
+    title: "Fashion: Soft Power and Fluid Grandeur",
+    content: "Wedding fashion for 2026 is moving toward Soft Power Dressing. Brides are moving away from heavy, restrictive traditional wear in favor of fluid, drape-led couture that honors Indian craftsmanship through lighter, sustainable fabrics. This \"Fluid Grandeur\" focuses on comfort and movement, allowing the wearer to feel both powerful and unburdened.",
+    category: "Lifestyle",
+    author: "Fashion Desk",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/fashion/800/600"
+  },
+  {
+    id: "life-10",
+    title: "Mental Health: Nervous System Regulation",
+    content: "\"Mental health\" is expanding to include Nervous System Regulation. Today's top wellness routines prioritize \"vagus nerve\" exercises, box breathing, and slow-motion stretching. The goal is to move the body out of a \"fight or flight\" state caused by constant notifications and into a \"rest and digest\" state, treating the nervous system as the foundation of overall health",
+    category: "Lifestyle",
+    author: "Health Bureau",
+    date: "Feb 23, 2026",
+    imageUrl: "https://picsum.photos/seed/mentalhealth/800/600"
+  }
+];
+
 const FALLBACK_NEWS: NewsArticle[] = [
   {
     id: "fallback-1",
@@ -422,6 +515,13 @@ export const geminiService = {
             const filteredData = data.filter(n => !staticIds.has(n.id));
             data = [...STATIC_POLITICAL_NEWS, ...filteredData];
           }
+
+          // Prepend static lifestyle news for Lifestyle category
+          if (category.toLowerCase().includes("lifestyle")) {
+            const staticIds = new Set(STATIC_LIFESTYLE_NEWS.map(n => n.id));
+            const filteredData = data.filter(n => !staticIds.has(n.id));
+            data = [...STATIC_LIFESTYLE_NEWS, ...filteredData];
+          }
           
           if (data.length > 0) {
             cache.set(cacheKey, { data, timestamp: Date.now() });
@@ -435,10 +535,12 @@ export const geminiService = {
         const isGeneral = category.toLowerCase().includes("general") || category.toLowerCase().includes("home");
         const isSports = category.toLowerCase().includes("sports");
         const isPolitics = category.toLowerCase().includes("politics");
+        const isLifestyle = category.toLowerCase().includes("lifestyle");
         
         if (isGeneral) return [...STATIC_NEWS, ...FALLBACK_NEWS];
         if (isSports) return [...STATIC_SPORTS_NEWS, ...FALLBACK_NEWS];
         if (isPolitics) return [...STATIC_POLITICAL_NEWS, ...FALLBACK_NEWS];
+        if (isLifestyle) return [...STATIC_LIFESTYLE_NEWS, ...FALLBACK_NEWS];
         return FALLBACK_NEWS;
       }
     }).catch(() => {
@@ -446,10 +548,12 @@ export const geminiService = {
       const isGeneral = category.toLowerCase().includes("general") || category.toLowerCase().includes("home");
       const isSports = category.toLowerCase().includes("sports");
       const isPolitics = category.toLowerCase().includes("politics");
+      const isLifestyle = category.toLowerCase().includes("lifestyle");
       
       if (isGeneral) return [...STATIC_NEWS, ...FALLBACK_NEWS];
       if (isSports) return [...STATIC_SPORTS_NEWS, ...FALLBACK_NEWS];
       if (isPolitics) return [...STATIC_POLITICAL_NEWS, ...FALLBACK_NEWS];
+      if (isLifestyle) return [...STATIC_LIFESTYLE_NEWS, ...FALLBACK_NEWS];
       return FALLBACK_NEWS;
     });
   },
@@ -488,6 +592,15 @@ export const geminiService = {
       const staticIds = new Set(STATIC_POLITICAL_NEWS.map(n => n.id));
       const filteredData = data.filter(n => !staticIds.has(n.id));
       return [...STATIC_POLITICAL_NEWS, ...filteredData];
+    }
+
+    // Always ensure static lifestyle news is present for Lifestyle
+    if (category.toLowerCase().includes("lifestyle")) {
+      if (!data) return STATIC_LIFESTYLE_NEWS;
+      
+      const staticIds = new Set(STATIC_LIFESTYLE_NEWS.map(n => n.id));
+      const filteredData = data.filter(n => !staticIds.has(n.id));
+      return [...STATIC_LIFESTYLE_NEWS, ...filteredData];
     }
     
     return data;
