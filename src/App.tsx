@@ -198,8 +198,19 @@ const ArticleCard = ({ article, onSummarize }: { article: NewsArticle, onSummari
                 <span className="font-bold uppercase tracking-tighter flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3" /> Authenticity: {authData.score}%
                 </span>
+                <span className={cn(
+                  "font-black uppercase text-sm tracking-tight",
+                  authData.score > 70 ? "text-green-600" : "text-red-600"
+                )}>
+                  {authData.score > 70 ? "IT IS REAL" : "IT IS FAKE"}
+                </span>
               </div>
-              <p className="line-clamp-2 mb-2">{authData.reasoning}</p>
+              <p className={cn(
+                "line-clamp-2 mb-2 font-bold",
+                authData.score > 70 ? "text-green-700" : "text-red-700"
+              )}>
+                {authData.reasoning}
+              </p>
               <div className="flex flex-wrap gap-1">
                 {authData.sources?.slice(0, 2).map((s: string) => (
                   <span key={s} className="bg-white/50 px-1.5 py-0.5 rounded border border-current/10">{s}</span>
@@ -225,22 +236,60 @@ const ArticleCard = ({ article, onSummarize }: { article: NewsArticle, onSummari
 const FakeNewsDetector = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+        setResult(null);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+        setResult(null);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleScan = async () => {
+    if (!imagePreview) return;
     setIsAnalyzing(true);
-    // Simulate scan
-    setTimeout(() => {
-      setResult({
-        score: 85,
-        reasoning: "The content aligns with verified reports from major news outlets. No inflammatory patterns detected.",
-        sources: ["Reuters", "Associated Press", "BBC News"]
-      });
+    try {
+      const [mimePart, base64Part] = imagePreview.split(',');
+      const mimeType = mimePart.match(/:(.*?);/)?.[1] || 'image/jpeg';
+      const data = await geminiService.analyzeNewsImage(base64Part, mimeType);
+      setResult(data);
+    } catch (error) {
+      console.error("Analysis failed", error);
+      setResult({ score: 0, reasoning: "Error analyzing image. Please try again.", sources: [] });
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+    }
   };
 
   return (
-    <section className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm mb-12">
+    <section 
+      className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm mb-12"
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       <div className="flex flex-col md:flex-row gap-8 items-center">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-4">
@@ -248,63 +297,124 @@ const FakeNewsDetector = () => {
             <h2 className="text-2xl font-bold uppercase tracking-tighter">Fake News Detector</h2>
           </div>
           <p className="text-gray-600 mb-6 max-w-xl">
-            Upload a screenshot or use your camera to verify news authenticity instantly. Our AI-powered tool cross-references multiple verified sources to provide a reliability score.
+            Upload a screenshot to verify news authenticity instantly. Our AI-powered tool cross-references multiple verified sources to provide a reliability score.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button onClick={handleScan} className="flex items-center gap-2 bg-brand-orange text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all">
-              <Camera className="w-5 h-5" />
-              SCAN WITH CAMERA
-            </button>
-            <button className="flex items-center gap-2 bg-brand-dark text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all">
+            <button 
+              onClick={() => fileInputRef.current?.click()} 
+              className="flex items-center gap-2 bg-brand-dark text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all"
+            >
               <Upload className="w-5 h-5" />
               UPLOAD LOCAL IMAGE
             </button>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileUpload} 
+              className="hidden" 
+              accept="image/*" 
+            />
+            {imagePreview && !isAnalyzing && (
+              <button 
+                onClick={handleScan} 
+                className="flex items-center gap-2 bg-brand-blue text-white px-8 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all animate-pulse"
+              >
+                <RefreshCw className="w-5 h-5" />
+                SCAN NOW
+              </button>
+            )}
           </div>
         </div>
         
-        <AnimatePresence>
-          {isAnalyzing && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full md:w-64 h-48 bg-gray-50 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-200"
-            >
-              <RefreshCw className="w-8 h-8 text-brand-orange animate-spin mb-2" />
-              <span className="text-xs font-bold text-gray-500 uppercase">Analyzing Content...</span>
-            </motion.div>
-          )}
-          
-          {result && !isAnalyzing && (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="w-full md:w-80 bg-green-50 rounded-xl p-6 border border-green-100"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold text-green-700 uppercase">Authenticity Score</span>
-                <span className="text-2xl font-black text-green-600">{result.score}%</span>
+        <div className="w-full md:w-80 flex flex-col gap-4">
+          <div className="relative w-full aspect-video md:aspect-square bg-gray-50 rounded-2xl overflow-hidden border-2 border-dashed border-gray-200 flex items-center justify-center">
+            {imagePreview ? (
+              <img 
+                src={imagePreview} 
+                className="w-full h-full object-cover" 
+                alt="Preview" 
+              />
+            ) : (
+              <div className="text-center p-6">
+                <Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Drop image here or use controls</p>
               </div>
-              <div className="w-full bg-green-200 h-2 rounded-full mb-4">
-                <div className="bg-green-500 h-full rounded-full" style={{ width: `${result.score}%` }}></div>
-              </div>
-              <p className="text-xs text-green-800 mb-4 font-medium leading-relaxed">
-                {result.reasoning}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {result.sources.map((s: string) => (
-                  <span key={s} className="text-[9px] bg-white text-green-700 px-2 py-1 rounded border border-green-200 font-bold uppercase">{s}</span>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+            
+            <AnimatePresence>
+              {isAnalyzing && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center"
+                >
+                  <RefreshCw className="w-8 h-8 text-brand-orange animate-spin mb-2" />
+                  <span className="text-xs font-bold text-gray-500 uppercase">Analyzing Content...</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <AnimatePresence>
+            {result && !isAnalyzing && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={cn(
+                  "rounded-2xl p-6 border",
+                  result.score > 70 ? "bg-green-50 border-green-100" : "bg-red-50 border-red-100"
+                )}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className={cn(
+                    "text-xs font-bold uppercase",
+                    result.score > 70 ? "text-green-700" : "text-red-700"
+                  )}>Authenticity Score</span>
+                  <span className={cn(
+                    "text-2xl font-black",
+                    result.score > 70 ? "text-green-600" : "text-red-600"
+                  )}>{result.score}%</span>
+                </div>
+                
+                <div className="text-center mb-6 py-2 border-y border-current/10">
+                  <span className={cn(
+                    "text-3xl font-black uppercase tracking-widest",
+                    result.score > 70 ? "text-green-600" : "text-red-600"
+                  )}>
+                    {result.score > 70 ? "IT IS REAL" : "IT IS FAKE"}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 h-2 rounded-full mb-4 overflow-hidden">
+                  <div 
+                    className={cn(
+                      "h-full rounded-full transition-all duration-1000",
+                      result.score > 70 ? "bg-green-500" : "bg-red-500"
+                    )} 
+                    style={{ width: `${result.score}%` }}
+                  ></div>
+                </div>
+                <p className={cn(
+                  "text-xs mb-4 font-medium leading-relaxed",
+                  result.score > 70 ? "text-green-800" : "text-red-800"
+                )}>
+                  {result.reasoning}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {result.sources.map((s: string) => (
+                    <span key={s} className="text-[9px] bg-white px-2 py-1 rounded border border-current/10 font-bold uppercase">{s}</span>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );
 };
 
-const SummarizerModal = ({ article, onClose }: { article: NewsArticle, onClose: () => void }) => {
+const SummarizerModal = ({ article, onClose, allArticles, onArticleSelect }: { article: NewsArticle, onClose: () => void, allArticles: NewsArticle[], onArticleSelect: (a: NewsArticle) => void }) => {
   const [level, setLevel] = useState('30-word');
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
@@ -313,6 +423,11 @@ const SummarizerModal = ({ article, onClose }: { article: NewsArticle, onClose: 
   const [fakeNewsMode, setFakeNewsMode] = useState(false);
   const [fakeNewsData, setFakeNewsData] = useState<any>(null);
   const [lang, setLang] = useState('English');
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  const relatedArticles = allArticles
+    .filter(a => a.category === article.category && a.id !== article.id)
+    .slice(0, 4);
 
   const levels = [
     { id: '30-word', label: '30 Words', icon: FileText },
@@ -358,7 +473,10 @@ const SummarizerModal = ({ article, onClose }: { article: NewsArticle, onClose: 
 
   useEffect(() => {
     fetchSummary(level);
-  }, [article]);
+    if (contentRef.current) {
+      contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [article.id]);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -428,7 +546,7 @@ const SummarizerModal = ({ article, onClose }: { article: NewsArticle, onClose: 
           </div>
         </div>
 
-        <div className="flex-1 p-8 overflow-y-auto bg-gray-50">
+        <div ref={contentRef} className="flex-1 p-8 overflow-y-auto bg-gray-50 scroll-smooth">
           {loading ? (
             <div className="h-full flex flex-col items-center justify-center text-gray-400">
               <RefreshCw className="w-12 h-12 animate-spin mb-4" />
@@ -472,6 +590,15 @@ const SummarizerModal = ({ article, onClose }: { article: NewsArticle, onClose: 
                     fakeNewsData?.score > 70 ? "text-green-600" : "text-red-600"
                   )}>{fakeNewsData?.score}%</span>
                 </div>
+
+                <div className="text-center mb-8 py-4 border-y border-current/10">
+                  <span className={cn(
+                    "text-5xl font-black uppercase tracking-widest",
+                    fakeNewsData?.score > 70 ? "text-green-600" : "text-red-600"
+                  )}>
+                    {fakeNewsData?.score > 70 ? "IT IS REAL" : "IT IS FAKE"}
+                  </span>
+                </div>
                 <div className="w-full bg-gray-200 h-3 rounded-full mb-6 overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
@@ -508,6 +635,46 @@ const SummarizerModal = ({ article, onClose }: { article: NewsArticle, onClose: 
                 </button>
               </div>
               <Markdown>{summary}</Markdown>
+            </div>
+          )}
+
+          {/* Related Articles Section */}
+          {!loading && relatedArticles.length > 0 && (
+            <div className="mt-16 pt-12 border-t border-gray-200">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-xl font-bold uppercase tracking-tighter flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-brand-orange" /> Related Articles
+                </h3>
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">More from {article.category}</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {relatedArticles.map((ra) => (
+                  <motion.div 
+                    key={ra.id} 
+                    whileHover={{ y: -5 }}
+                    onClick={() => onArticleSelect(ra)}
+                    className="flex gap-4 group cursor-pointer bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all"
+                  >
+                    <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0">
+                      <img 
+                        src={ra.imageUrl} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                        referrerPolicy="no-referrer" 
+                        alt={ra.title}
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <span className="text-[9px] font-bold text-brand-orange uppercase mb-1">{ra.category}</span>
+                      <h4 className="text-sm font-bold leading-tight line-clamp-2 group-hover:text-brand-orange transition-colors">{ra.title}</h4>
+                      <div className="flex items-center gap-2 mt-2 text-[8px] font-bold text-gray-400 uppercase">
+                        <span>{ra.author}</span>
+                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                        <span>{ra.date}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -990,16 +1157,28 @@ export default function App() {
   const [activePage, setActivePage] = useState('Home');
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [region, setRegion] = useState('Global');
 
   const loadNews = async () => {
     setLoading(true);
-    const category = activePage === 'Home' ? 'General' : activePage;
-    const prompt = region === 'Global' ? category : `${category} news focusing on ${region}`;
-    const data = await geminiService.generateNews(prompt);
-    setNews(data);
-    setLoading(false);
+    setError(null);
+    try {
+      const category = activePage === 'Home' ? 'General' : activePage;
+      const prompt = region === 'Global' ? category : `${category} news focusing on ${region}`;
+      const data = await geminiService.generateNews(prompt);
+      setNews(data);
+    } catch (err: any) {
+      console.error("Failed to load news", err);
+      if (err?.message?.includes("429") || err?.status === 429) {
+        setError("API Quota Exhausted. Please try again in a few minutes.");
+      } else {
+        setError("Failed to load news. Please check your connection.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -1017,6 +1196,19 @@ export default function App() {
           <div className="h-[60vh] flex flex-col items-center justify-center text-gray-400">
             <RefreshCw className="w-16 h-16 animate-spin mb-6 text-brand-orange" />
             <h2 className="text-xl font-bold uppercase tracking-[0.2em]">AI is gathering the latest news...</h2>
+          </div>
+        ) : error ? (
+          <div className="h-[60vh] flex flex-col items-center justify-center text-center">
+            <AlertTriangle className="w-16 h-16 text-brand-orange mb-6" />
+            <h2 className="text-2xl font-bold text-brand-dark mb-4 uppercase tracking-tighter">{error}</h2>
+            <p className="text-gray-500 mb-8 max-w-md">We're experiencing high demand. Our AI journalists are taking a short break. Please try again shortly.</p>
+            <button 
+              onClick={loadNews}
+              className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-opacity-90 transition-all flex items-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              RETRY NOW
+            </button>
           </div>
         ) : (
           <motion.div
@@ -1040,6 +1232,8 @@ export default function App() {
         {selectedArticle && (
           <SummarizerModal 
             article={selectedArticle} 
+            allArticles={news}
+            onArticleSelect={setSelectedArticle}
             onClose={() => setSelectedArticle(null)} 
           />
         )}
