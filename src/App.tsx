@@ -20,7 +20,9 @@ import {
   FileText,
   Twitter,
   GraduationCap,
-  MapPin
+  MapPin,
+  Trophy,
+  Clock
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -686,60 +688,126 @@ const SummarizerModal = ({ article, onClose, allArticles, onArticleSelect }: { a
 // --- Pages ---
 
 const HomePage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (a: NewsArticle) => void }) => {
-  const featured = news[0];
-  const others = news.slice(1);
+  // Separate static news from dynamic news
+  const staticNews = news.filter(a => a.id.startsWith('static-'));
+  const dynamicNews = news.filter(a => !a.id.startsWith('static-'));
+  
+  const featured = dynamicNews[0] || staticNews[0] || news[0];
+  const others = news.filter(a => a.id !== featured?.id && !a.id.startsWith('static-'));
 
   return (
-    <div className="space-y-12">
-      {/* Hero Section */}
+    <div className="space-y-20">
+      {/* Editorial Hero Section */}
       {featured && (
         <section 
-          className="relative h-[600px] rounded-3xl overflow-hidden group cursor-pointer"
+          className="relative h-[80vh] min-h-[600px] -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden group cursor-pointer"
           onClick={() => onSummarize(featured)}
         >
           <img 
             src={featured.imageUrl} 
             alt={featured.title}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 p-12 max-w-3xl">
-            <div className="flex items-center gap-4 mb-6">
-              <span className="bg-brand-orange text-white text-xs font-bold px-3 py-1 rounded uppercase">World Affairs</span>
-              <div className="flex items-center gap-2 text-white/60 text-xs font-bold uppercase">
-                <Play className="w-3 h-3" /> Listen
-                <FileText className="w-3 h-3 ml-2" /> Summary
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/20 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 p-8 md:p-16 max-w-5xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <span className="bg-brand-orange text-white text-[10px] font-black px-3 py-1.5 rounded-sm uppercase tracking-[0.2em]">
+                  {featured.category}
+                </span>
+                <div className="h-px w-12 bg-white/30"></div>
+                <span className="text-white/60 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                  <Clock className="w-3 h-3" /> {featured.date}
+                </span>
               </div>
-            </div>
-            <h1 className="text-5xl md:text-6xl text-white mb-6 leading-[0.9] tracking-tighter">
-              {featured.title}
-            </h1>
-            <p className="text-white/80 text-lg mb-8 line-clamp-2 font-medium">
-              {featured.content}
-            </p>
-            <div className="flex items-center gap-4 text-white/40 text-[10px] font-bold uppercase tracking-widest">
-              <span>{featured.author}</span>
-              <span className="w-1 h-1 bg-white/20 rounded-full"></span>
-              <span>{featured.date}</span>
-            </div>
+              <h1 className="text-6xl md:text-8xl text-white mb-8 leading-[0.85] tracking-tighter font-bold group-hover:text-brand-orange transition-colors duration-500">
+                {featured.title}
+              </h1>
+              <p className="text-white/70 text-xl mb-10 line-clamp-2 max-w-2xl font-medium leading-relaxed">
+                {featured.content}
+              </p>
+              <div className="flex items-center gap-6">
+                <button className="bg-white text-brand-dark px-8 py-4 rounded-full font-bold uppercase text-xs tracking-widest hover:bg-brand-orange hover:text-white transition-all flex items-center gap-3">
+                  Read Full Story <ChevronRight className="w-4 h-4" />
+                </button>
+                <div className="flex items-center gap-4 text-white/40 text-[10px] font-bold uppercase tracking-widest">
+                  <span>By {featured.author}</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
       )}
 
-      {/* Fake News Detector */}
-      <FakeNewsDetector />
-
-      {/* News Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2 space-y-12">
-          <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-            <h2 className="text-3xl uppercase tracking-tighter">Latest Stories</h2>
-            <button className="text-brand-orange text-xs font-bold uppercase flex items-center gap-1">
-              See All <ChevronRight className="w-4 h-4" />
-            </button>
+      {/* Special Report: Permanent News Updates */}
+      {staticNews.length > 0 && (
+        <section className="relative py-20 border-y border-gray-100">
+          <div className="flex flex-col md:flex-row items-baseline justify-between mb-16 gap-4">
+            <div className="space-y-2">
+              <span className="text-brand-orange text-[10px] font-black uppercase tracking-[0.3em] block">Exclusive</span>
+              <h2 className="text-5xl font-bold uppercase tracking-tighter text-brand-dark">
+                Special Reports
+              </h2>
+            </div>
+            <p className="text-gray-400 text-sm max-w-xs font-medium italic">
+              "Curated insights and permanent updates from our global editorial team."
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-100 border border-gray-100 rounded-3xl overflow-hidden shadow-2xl shadow-brand-dark/5">
+            {staticNews.map((a, idx) => (
+              <div 
+                key={a.id} 
+                className={cn(
+                  "group cursor-pointer bg-white p-8 hover:bg-brand-dark transition-all duration-500 flex flex-col justify-between min-h-[400px]",
+                  idx === 0 && "md:col-span-2 lg:col-span-2"
+                )}
+                onClick={() => onSummarize(a)}
+              >
+                <div>
+                  <span className="text-[10px] font-black text-brand-orange uppercase tracking-widest mb-6 block group-hover:text-white/50">
+                    0{idx + 1} / {a.category}
+                  </span>
+                  <h3 className={cn(
+                    "font-bold leading-tight group-hover:text-white transition-colors mb-6",
+                    idx === 0 ? "text-4xl" : "text-2xl"
+                  )}>
+                    {a.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm leading-relaxed line-clamp-4 group-hover:text-white/60">
+                    {a.content}
+                  </p>
+                </div>
+                <div className="mt-8 pt-8 border-t border-gray-50 group-hover:border-white/10 flex items-center justify-between">
+                  <span className="text-[9px] font-bold text-gray-400 uppercase group-hover:text-white/30">{a.author}</span>
+                  <ChevronRight className="w-4 h-4 text-brand-orange transform group-hover:translate-x-2 transition-transform" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Fake News Detector - Integrated as a tool */}
+      <div className="py-10">
+        <FakeNewsDetector />
+      </div>
+
+      {/* Main News Feed */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="lg:col-span-8 space-y-16">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+            <h2 className="text-3xl font-bold uppercase tracking-tighter">Latest Stories</h2>
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sort by: Newest</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
             {others.map((article) => (
               <ArticleCard key={article.id} article={article} onSummarize={onSummarize} />
             ))}
@@ -747,55 +815,40 @@ const HomePage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (a:
         </div>
 
         {/* Sidebar */}
-        <aside className="space-y-12">
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-brand-orange mb-6 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" /> Most Read
-            </h3>
-            <div className="space-y-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex gap-4 group cursor-pointer">
-                  <span className="text-4xl font-black text-gray-100 group-hover:text-brand-orange/20 transition-colors">0{i}</span>
-                  <div>
-                    <h4 className="text-sm font-bold leading-tight mb-1 group-hover:text-brand-orange transition-colors">
-                      The 10 Best Investment Strategies for a Volatile Market
-                    </h4>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase">Economy • 2.4k views</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-brand-dark rounded-2xl p-6 text-white overflow-hidden relative">
-            <div className="relative z-10">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-6">Live Scores</h3>
-              <div className="space-y-4">
-                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] font-bold text-white/40 uppercase">NBA • Final</span>
-                    <CheckCircle2 className="w-3 h-3 text-green-500" />
-                  </div>
-                  <div className="flex justify-between items-center font-bold">
-                    <span>LAK</span>
-                    <span className="text-brand-orange">112 - 108</span>
-                    <span>GSW</span>
-                  </div>
-                </div>
-                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] font-bold text-white/40 uppercase">Premier League • 65'</span>
-                    <span className="text-[8px] bg-red-500 text-white px-1 rounded animate-pulse">LIVE</span>
-                  </div>
-                  <div className="flex justify-between items-center font-bold">
-                    <span>MUN</span>
-                    <span className="text-brand-orange">2 - 1</span>
-                    <span>CHE</span>
-                  </div>
+        <aside className="lg:col-span-4 space-y-16">
+          <div className="sticky top-32 space-y-16">
+            <div className="bg-brand-dark rounded-3xl p-10 text-white relative overflow-hidden">
+              <div className="relative z-10">
+                <TrendingUp className="text-brand-orange w-8 h-8 mb-6" />
+                <h3 className="text-2xl font-bold mb-4 leading-tight">Trending Topics</h3>
+                <p className="text-white/50 text-sm mb-8">AI-curated topics currently shaping the global conversation.</p>
+                <div className="flex flex-wrap gap-2">
+                  {['Tariffs', 'SpaceX', 'AI Ethics', 'Climate', 'Elections'].map(tag => (
+                    <span key={tag} className="px-3 py-1.5 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-brand-orange transition-colors cursor-pointer">
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
               </div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/20 blur-3xl rounded-full -mr-16 -mt-16"></div>
             </div>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
+
+            <div className="space-y-8">
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-brand-orange">Must Read</h3>
+              <div className="space-y-8">
+                {others.slice(0, 3).map((a, i) => (
+                  <div key={a.id} className="flex gap-6 group cursor-pointer" onClick={() => onSummarize(a)}>
+                    <span className="text-4xl font-black text-gray-100 group-hover:text-brand-orange/20 transition-colors">0{i + 1}</span>
+                    <div>
+                      <h4 className="text-sm font-bold leading-tight mb-2 group-hover:text-brand-orange transition-colors">
+                        {a.title}
+                      </h4>
+                      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{a.category} • {a.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </aside>
       </div>
@@ -804,22 +857,32 @@ const HomePage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (a:
 };
 
 const PoliticsPage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (a: NewsArticle) => void }) => {
+  // Separate static news from dynamic news
+  const staticPolitics = news.filter(a => a.id.startsWith('poly-'));
+  const dynamicPolitics = news.filter(a => !a.id.startsWith('poly-'));
+  
+  const featured = dynamicPolitics[0] || staticPolitics[0] || news[0];
+  const others = news.filter(a => a.id !== featured?.id && !a.id.startsWith('poly-'));
+
   return (
     <div className="space-y-12">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <section className="relative h-[500px] rounded-3xl overflow-hidden group cursor-pointer" onClick={() => onSummarize(news[0])}>
-            <img src={news[0]?.imageUrl} className="absolute inset-0 w-full h-full object-cover" referrerPolicy="no-referrer" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 p-8">
-              <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">Government</span>
-              <h1 className="text-4xl text-white mb-4 leading-tight">Landmark Legislative Victory: Health Reform Bill Passes Senate Floor</h1>
-              <div className="flex items-center gap-4 text-white/60 text-[10px] font-bold uppercase">
-                <span>2 hours ago</span>
-                <span>By Julian Thorne</span>
+          {featured && (
+            <section className="relative h-[500px] rounded-3xl overflow-hidden group cursor-pointer" onClick={() => onSummarize(featured)}>
+              <img src={featured.imageUrl} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 p-8 w-full">
+                <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">{featured.category}</span>
+                <h1 className="text-4xl text-white mb-4 leading-tight font-bold group-hover:text-brand-orange transition-colors">{featured.title}</h1>
+                <div className="flex items-center gap-4 text-white/60 text-[10px] font-bold uppercase">
+                  <span>{featured.date}</span>
+                  <span className="w-1 h-1 bg-white/20 rounded-full"></span>
+                  <span>By {featured.author}</span>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
         </div>
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
@@ -864,9 +927,36 @@ const PoliticsPage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize:
           </div>
         </div>
       </div>
+
+      {/* Permanent Political Updates Section */}
+      {staticPolitics.length > 0 && (
+        <section className="bg-gray-50 rounded-3xl p-10 border border-gray-100">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold uppercase tracking-tighter flex items-center gap-3 text-brand-dark">
+              <ShieldCheck className="text-brand-orange w-8 h-8" /> Permanent Political Updates
+            </h2>
+            <div className="h-px flex-1 bg-gray-200 mx-8 hidden md:block"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {staticPolitics.map((a) => (
+              <div 
+                key={a.id} 
+                className="group cursor-pointer border-l-2 border-brand-orange/30 pl-6 hover:border-brand-orange transition-all"
+                onClick={() => onSummarize(a)}
+              >
+                <h3 className="text-xl font-bold mb-3 text-brand-dark group-hover:text-brand-orange transition-colors">{a.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4">{a.content}</p>
+                <button className="text-[10px] font-bold uppercase tracking-widest text-brand-orange flex items-center gap-2">
+                  Read Detail Explanation <ChevronRight className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {news.slice(1).map(a => (
+        {others.map(a => (
           <ArticleCard key={a.id} article={a} onSummarize={onSummarize} />
         ))}
       </div>
@@ -891,6 +981,14 @@ const PoliticsPage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize:
 };
 
 const SportsPage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (a: NewsArticle) => void }) => {
+  // Separate static news from dynamic news for specific display
+  const staticSports = news.filter(a => a.id.startsWith('sports-'));
+  const dynamicSports = news.filter(a => !a.id.startsWith('sports-'));
+  
+  // Use the first dynamic article or first static for the hero
+  const heroArticle = dynamicSports[0] || staticSports[0] || news[0];
+  const otherNews = news.filter(a => a.id !== heroArticle?.id);
+
   return (
     <div className="space-y-12">
       <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
@@ -906,19 +1004,21 @@ const SportsPage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <section className="relative h-[500px] rounded-3xl overflow-hidden group cursor-pointer" onClick={() => onSummarize(news[0])}>
-            <img src={news[0]?.imageUrl} className="absolute inset-0 w-full h-full object-cover" referrerPolicy="no-referrer" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 p-8">
-              <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">Champions League</span>
-              <h1 className="text-4xl text-white mb-4 leading-tight">Champions League Finals: Previewing the Big Match</h1>
-              <p className="text-white/60 text-sm mb-6 max-w-xl">The stage is set in Istanbul as two giants of European football prepare for the ultimate showdown. Can the underdogs pull off a miracle?</p>
-              <div className="flex items-center gap-6 text-white/40 text-[10px] font-bold uppercase">
-                <span className="flex items-center gap-1"><RefreshCw className="w-3 h-3" /> 2 hours ago</span>
-                <span className="flex items-center gap-1"><RefreshCw className="w-3 h-3" /> 128 comments</span>
+          {heroArticle && (
+            <section className="relative h-[500px] rounded-3xl overflow-hidden group cursor-pointer" onClick={() => onSummarize(heroArticle)}>
+              <img src={heroArticle.imageUrl} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 p-8 w-full">
+                <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">{heroArticle.category}</span>
+                <h1 className="text-4xl text-white mb-4 leading-tight font-bold group-hover:text-brand-orange transition-colors">{heroArticle.title}</h1>
+                <p className="text-white/70 text-sm mb-6 max-w-xl line-clamp-2">{heroArticle.content}</p>
+                <div className="flex items-center gap-6 text-white/40 text-[10px] font-bold uppercase">
+                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {heroArticle.date}</span>
+                  <span className="flex items-center gap-1"><User className="w-3 h-3" /> {heroArticle.author}</span>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
         </div>
         <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
           <div className="flex justify-between items-center mb-6">
@@ -979,8 +1079,35 @@ const SportsPage = ({ news, onSummarize }: { news: NewsArticle[], onSummarize: (
         </div>
       </div>
 
+      {/* Permanent Sports Updates Section */}
+      {staticSports.length > 0 && (
+        <section className="bg-brand-dark rounded-3xl p-10 text-white">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold uppercase tracking-tighter flex items-center gap-3">
+              <Trophy className="text-brand-orange w-8 h-8" /> Permanent Sports Updates
+            </h2>
+            <div className="h-px flex-1 bg-white/10 mx-8 hidden md:block"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {staticSports.map((a) => (
+              <div 
+                key={a.id} 
+                className="group cursor-pointer border-l-2 border-brand-orange/30 pl-6 hover:border-brand-orange transition-all"
+                onClick={() => onSummarize(a)}
+              >
+                <h3 className="text-xl font-bold mb-3 group-hover:text-brand-orange transition-colors">{a.title}</h3>
+                <p className="text-white/60 text-sm leading-relaxed line-clamp-3 mb-4">{a.content}</p>
+                <button className="text-[10px] font-bold uppercase tracking-widest text-brand-orange flex items-center gap-2">
+                  Read Detail Explanation <ChevronRight className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {news.slice(1).map(a => (
+        {otherNews.filter(a => !a.id.startsWith('sports-')).map(a => (
           <div key={a.id} className="group cursor-pointer" onClick={() => onSummarize(a)}>
             <div className="relative h-64 rounded-2xl overflow-hidden mb-4">
               <img src={a.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
@@ -1161,12 +1288,24 @@ export default function App() {
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [region, setRegion] = useState('Global');
 
-  const loadNews = async () => {
+  const loadNews = async (force: boolean = false) => {
+    const category = (activePage === 'Home' || activePage === 'General News') ? 'General' : activePage;
+    const prompt = region === 'Global' ? category : `${category} news focusing on ${region}`;
+    
+    // Check cache first if not forcing a refresh
+    if (!force) {
+      const cached = geminiService.getCachedNews(prompt);
+      if (cached) {
+        setNews(cached);
+        setLoading(false);
+        setError(null);
+        return;
+      }
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const category = activePage === 'Home' ? 'General' : activePage;
-      const prompt = region === 'Global' ? category : `${category} news focusing on ${region}`;
       const data = await geminiService.generateNews(prompt);
       setNews(data);
     } catch (err: any) {
@@ -1182,13 +1321,29 @@ export default function App() {
   };
 
   useEffect(() => {
-    loadNews();
+    // On page or region change, try to load from cache
+    // But don't trigger a network request automatically
+    const category = (activePage === 'Home' || activePage === 'General News') ? 'General' : activePage;
+    const prompt = region === 'Global' ? category : `${category} news focusing on ${region}`;
+    const cached = geminiService.getCachedNews(prompt);
+    
+    if (cached) {
+      setNews(cached);
+      setLoading(false);
+      setError(null);
+    } else {
+      // If no cache, we can either show fallback or empty state
+      // The user wants to avoid automatic updates
+      setNews([]);
+      setLoading(false);
+      setError(null);
+    }
   }, [activePage, region]);
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar activePage={activePage} setActivePage={setActivePage} />
-      <UpdateBar onRefresh={loadNews} loading={loading} region={region} setRegion={setRegion} />
+      <UpdateBar onRefresh={() => loadNews(true)} loading={loading} region={region} setRegion={setRegion} />
       <BreakingNews />
       
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
@@ -1203,11 +1358,24 @@ export default function App() {
             <h2 className="text-2xl font-bold text-brand-dark mb-4 uppercase tracking-tighter">{error}</h2>
             <p className="text-gray-500 mb-8 max-w-md">We're experiencing high demand. Our AI journalists are taking a short break. Please try again shortly.</p>
             <button 
-              onClick={loadNews}
+              onClick={() => loadNews(true)}
               className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-opacity-90 transition-all flex items-center gap-2"
             >
               <RefreshCw className="w-4 h-4" />
               RETRY NOW
+            </button>
+          </div>
+        ) : news.length === 0 ? (
+          <div className="h-[60vh] flex flex-col items-center justify-center text-center">
+            <BookOpen className="w-16 h-16 text-gray-200 mb-6" />
+            <h2 className="text-2xl font-bold text-brand-dark mb-4 uppercase tracking-tighter">No Stored News for {activePage}</h2>
+            <p className="text-gray-500 mb-8 max-w-md">You haven't updated the news for this category yet. Click the button below to fetch the latest AI-generated stories.</p>
+            <button 
+              onClick={() => loadNews(true)}
+              className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-opacity-90 transition-all flex items-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              FETCH LATEST NEWS
             </button>
           </div>
         ) : (
