@@ -42,39 +42,84 @@ const CACHE_TTL = 1000 * 60 * 60 * 24; // 24 hours for persistent cache
 const STATIC_NEWS: NewsArticle[] = [
   {
     id: "static-1",
-    title: "International: Trump Administration Imposes New 15% Global Tariff",
-    content: "In a swift response to a US Supreme Court ruling that struck down previous trade levies, the Trump administration has announced a new 15% temporary global tariff on all imports under Section 122 of the Trade Act of 1974. The move came after the Court declared earlier tariffs under the Emergency Economic Powers Act illegal, causing a brief rally in global markets that was quickly reversed by the new announcement. The US dollar and European stock markets saw a sharp decline today as businesses brace for a fresh wave of trade uncertainty.",
+    title: "The 2026 Pentagon AI Surge: A $153 Billion Bet on Digital Warfare",
+    content: "In a move that signaling a fundamental shift in American military doctrine, the Pentagon announced today it is fast-tracking $153 billion in new funding for 2026 to modernize the U.S. military with advanced Artificial Intelligence (AI) and autonomous systems. This funding, which was originally slated to be spread over five years, is being \"compressed\" into a single fiscal year to ensure the U.S. maintains a technological edge over China's rapidly advancing \"intelligentized\" warfare capabilities. The Department of Defense report emphasizes that these funds will be poured into AI-driven missile defense, autonomous naval \"ghost fleets,\" and battlefield data-processing tools designed to make split-second decisions. However, the acceleration has sparked a fierce debate in the House Armed Services Committee, where critics argue that such massive, rapid spending bypasses essential oversight and risks deploying lethal autonomous systems before ethical guardrails are fully matured. This \"AI Arms Race\" spending is expected to be a central theme of tonight’s State of the Union address, as the administration frames technological supremacy as the only path to preventing a global conflict.",
     category: "Politics",
-    author: "Global Desk",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/tariff/800/600"
+    author: "Defense Correspondent",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/pentagon/800/600"
   },
   {
     id: "static-2",
-    title: "India: PM Modi Inaugurates Delhi-Meerut Namo Bharat Corridor",
-    content: "Prime Minister Narendra Modi officially inaugurated the Meerut Metro and dedicated the full 82-km Delhi–Meerut Namo Bharat Corridor to the nation. This milestone in regional connectivity is expected to significantly reduce travel time and ease traffic congestion across the National Capital Region (NCR). During the event, the Prime Minister also announced that the statue of British architect Edwin Lutyens at Rashtrapati Bhavan would be replaced by one of C. Rajagopalachari, signaling a symbolic shift toward honoring indigenous Indian leadership.",
-    category: "Technology",
-    author: "National Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/corridor/800/600"
+    title: "The \"Bridge Tariff\" Crisis: US Trade Policy in Limbo",
+    content: "While the Supreme Court may have struck down President Trump’s original \"Liberation Day\" tariffs on February 20, the White House effectively bypassed that ruling today by triggering Section 122 of the Trade Act of 1974. Starting at midnight, U.S. Customs began collecting a new 10% \"bridge tariff\" on nearly all global imports. This temporary measure is designed to last 150 days, serving as a legal placeholder while the administration attempts to negotiate more permanent trade laws with a reluctant Congress. The move has created absolute chaos in the global markets today; while the President had threatened a 15% rate on social media over the weekend, the actual implementation at 10% has left businesses in a state of \"expensive confusion.\" In London and Tokyo, trade ministers have expressed \"extreme frustration,\" noting that the sudden policy shifts make it nearly impossible for firms to calculate margins for goods currently in transit. This maneuver is being viewed by legal experts as a direct challenge to the Supreme Court’s authority, setting the stage for a constitutional showdown over who truly controls the nation's \"purse strings\" regarding international trade.",
+    category: "Economy",
+    author: "Trade Analyst",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/tariff/800/600"
   },
   {
     id: "static-3",
-    title: "Global Security: Tensions Rise Between Pakistan and Afghanistan",
-    content: "Diplomatic tensions have escalated in South Asia as Pakistan confirmed carrying out cross-border strikes targeting militant hideouts inside Afghanistan. Islamabad stated the strikes were a response to recent suicide bombings orchestrated by fighters operating from Afghan soil. Meanwhile, in Europe, Hungary has blocked a new EU sanctions package against Russia, stalling progress on the fourth anniversary of the Ukraine war and highlighting continued internal divisions within the European Union.",
-    category: "Politics",
-    author: "Security Analyst",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/security/800/600"
+    title: "Escalating Tensions: The Taliban-Pakistan Airstrike Dispute",
+    content: "The geopolitical situation in South Asia has reached a boiling point today as UN Deputy Chief Rosemary DiCarlo engaged in a high-stakes phone call with the Taliban’s Foreign Ministry to discuss recent Pakistani airstrikes inside Afghan territory. These strikes, which took place over the weekend in the Nangarhar and Paktika provinces, reportedly killed 13 civilians, according to UN monitors. While Pakistan maintains the strikes were a necessary \"act of self-defense\" targeting TTP (Tehrik-i-Taliban Pakistan) militants who have been launching cross-border attacks, the Taliban government has formally filed a complaint with the UN Security Council, labeling the move a violation of sovereignty. Today, the situation grew even more complex as Iran offered to mediate between the two neighbors, fearing that a full-scale border war would destabilize the entire region and trigger a massive new wave of refugees. The UN is now under intense pressure to intervene before the escalating \"tit-for-tat\" skirmishes lead to a permanent breakdown of the fragile peace in the region.",
+    category: "General",
+    author: "Global Security Desk",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/southasia/800/600"
   },
   {
     id: "static-4",
-    title: "National Briefs: Security, Elections, and Incidents",
-    content: "Security: Indian security forces neutralized a Jaish-e-Mohammad terrorist in an encounter in Jammu and Kashmir’s Kishtwar district under Operation Trashi-I.\n\nElections: The final electoral roll for Tamil Nadu was published today, revealing a total of 5.67 crore electors after a massive revision process that saw nearly 70 lakh names deleted from the rolls.\n\nIncident: In Florida, the Secret Service fatally shot an armed man who attempted to breach the perimeter of the Mar-a-Lago resort while the President was away in Washington D.C.",
-    category: "General",
-    author: "Staff Reporter",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/briefs/800/600"
+    title: "South Korea’s Legal Drama: Ousted President Yoon Appeals Life Sentence",
+    content: "In Seoul, the political world is transfixed by the legal battle of ousted President Yoon Suk Yeol, who today officially filed an appeal against his life sentence for the controversial martial law decree of late 2025. The Seoul High Court is now the center of a national divide; supporters of the former president held a massive rally outside the courthouse today, claiming the sentence is \"political revenge,\" while counter-protesters demanded the sentence be upheld to protect the country's democracy. This appeal comes at a time of extreme vulnerability for South Korea, as the current transitional government struggles to manage a slowing economy and a cooling relationship with Washington. The outcome of this case is seen as a litmus test for the independence of the South Korean judiciary and will likely dictate the country’s political stability for the remainder of the decade",
+    category: "Politics",
+    author: "Seoul Bureau",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/seoul/800/600"
+  },
+  {
+    id: "static-5",
+    title: "Nigeria’s Constitutional Pivot: The Move Toward State Police",
+    content: "In a significant departure from Nigeria’s historically centralized security architecture, President Bola Tinubu used an interfaith fast gathering today in Abuja to signal a definitive push for the establishment of State Police. Addressing a diverse group of governors and religious leaders, the President emphasized that the current \"dark tunnel of uncertainty\" regarding national security can only be cleared by empowering local levels of government to protect their own citizens. This policy shift comes as a response to years of escalating banditry and kidnapping that have overwhelmed the federal police force. By promising that \"security is the foundation of prosperity,\" Tinubu is attempting to build a bipartisan consensus between Muslim and Christian leaders to support a constitutional amendment that would allow states to manage their own law enforcement. Critics, however, warn that without stringent federal oversight, state-controlled police could become tools for local political intimidation, setting the stage for a fierce legislative battle in the National Assembly over the coming months.",
+    category: "Politics",
+    author: "Abuja Correspondent",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/nigeria/800/600"
+  },
+  {
+    id: "static-6",
+    title: "Japan’s \"Ocean of Peace\" Initiative: Shinjiro Koizumi’s Pacific Strategy",
+    content: "Japanese Defense Minister Shinjiro Koizumi made a bold diplomatic play today in Tokyo, hosting defense chiefs from 14 Pacific island nations for the Japan Pacific Islands Defense Dialogue. Koizumi’s speech centered on building a \"multilayered network\" to ensure a \"free and open\" Indo-Pacific, explicitly stating that attempts to change the status quo by force—a veiled reference to China’s naval expansion—will not be tolerated. Simultaneously, the Japanese government revealed a strategic pivot toward Europe’s defense market, with high-level delegations currently visiting Finland and Sweden to match Japanese technological expertise with European dual-use military needs. This dual-track strategy marks a historic evolution in Japan’s post-war pacifist stance, as Tokyo seeks to reduce its defense reliance on the United States by becoming a primary security partner for both the Pacific islands and the European Union.",
+    category: "Politics",
+    author: "Tokyo Bureau",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/japan/800/600"
+  },
+  {
+    id: "static-7",
+    title: "The Brazil-US Standoff: Coup Convictions Meet Trade Retaliation",
+    content: "The diplomatic relationship between Brasília and Washington has reached its lowest point in decades following the recent conviction of former President Jair Bolsonaro for his role in the 2023 attempted coup. Today, as President Luiz Inácio Lula da Silva continues to laud the judiciary for \"fulfilling its role\" in protecting democracy, the administration is simultaneously grappling with the fallout of U.S.-imposed 50% tariffs on Brazilian goods. President Trump has labeled the trial a \"witch hunt\" and a personal attack on his ally, leading to a tit-for-tat economic war that has seen Brazil condemn the use of \"force against our democracy\" via economic coercion. With Lula now confirmed to seek re-election in the 2026 general election to prevent \"troglodytes\" from returning to power, Brazil is pivoting its trade focus toward the BRICS bloc and South Korea to offset the loss of the American market.",
+    category: "Politics",
+    author: "Brasília Bureau",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/brazil/800/600"
+  },
+  {
+    id: "static-8",
+    title: "African Union's Quest for \"Health Sovereignty\"",
+    content: "Following the conclusion of the 39th African Union Summit in Addis Ababa, the continent’s leaders today began implementing a landmark \"Health Sovereignty\" framework. With Tanzania’s President Samia Suluhu Hassan designated as the AU Champion for Reproductive and Maternal Health, the initiative seeks to drastically reduce Africa’s dependence on foreign aid and fragile global supply chains. The policy, which was a central pillar of the summit, mandates that member states increase domestic financing for health infrastructure to combat the fact that Sub-Saharan Africa still accounts for 70% of global maternal deaths. This movement toward self-reliance is being framed as a necessary survival tactic in a \"new world order\" where international partners, particularly the U.S., have significantly cut foreign humanitarian aid to prioritize domestic spending.",
+    category: "Health",
+    author: "Addis Ababa Desk",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/africa/800/600"
+  },
+  {
+    id: "static-9",
+    title: "Philippine Power Struggle: Impeachment vs. 2028 Presidential Ambitions",
+    content: "The political landscape in Manila is currently defined by a high-stakes \"war of attrition\" between the House of Representatives and Vice President Sara Duterte. Today, as a fourth impeachment complaint was endorsed against her by Manila Representative Bienvenido Abante Jr., Duterte countered by officially announcing her 2028 presidential bid. Supporters view the impeachment attempts as a coordinated effort by the \"Lakas-CMD\" bloc to derail her political future, while opponents argue the Vice President is using her early campaign announcement to divert public attention from allegations of fund mismanagement. This domestic turmoil coincides with the Philippines' current ASEAN chairmanship, where the country is leading a critical review of the \"Five-Point Consensus\" on Myanmar, leaving many to wonder if the internal political infighting will diminish the Philippines' ability to lead on the regional stage.",
+    category: "Politics",
+    author: "Manila Bureau",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/manila/800/600"
   }
 ];
 
@@ -165,147 +210,84 @@ const STATIC_SPORTS_NEWS: NewsArticle[] = [
 const STATIC_POLITICAL_NEWS: NewsArticle[] = [
   {
     id: "poly-1",
-    title: "Netherlands: Rob Jetten Sworn In as Nation’s Youngest Prime Minister",
-    content: "In a historic shift for Dutch politics, Rob Jetten (38) has been officially sworn in as the youngest-ever Prime Minister of the Netherlands. Leading a three-party minority coalition, Jetten faces the immediate challenge of navigating a fragmented parliament where his government holds only 66 of the 150 seats. King Willem-Alexander wished the new cabinet \"good luck in uncertain times\" as they prepare to negotiate every piece of legislation with opposition lawmakers to ensure stability.",
+    title: "The 2026 Pentagon AI Surge: A $153 Billion Bet on Digital Warfare",
+    content: "In a move that signaling a fundamental shift in American military doctrine, the Pentagon announced today it is fast-tracking $153 billion in new funding for 2026 to modernize the U.S. military with advanced Artificial Intelligence (AI) and autonomous systems. This funding, which was originally slated to be spread over five years, is being \"compressed\" into a single fiscal year to ensure the U.S. maintains a technological edge over China's rapidly advancing \"intelligentized\" warfare capabilities. The Department of Defense report emphasizes that these funds will be poured into AI-driven missile defense, autonomous naval \"ghost fleets,\" and battlefield data-processing tools designed to make split-second decisions. However, the acceleration has sparked a fierce debate in the House Armed Services Committee, where critics argue that such massive, rapid spending bypasses essential oversight and risks deploying lethal autonomous systems before ethical guardrails are fully matured. This \"AI Arms Race\" spending is expected to be a central theme of tonight’s State of the Union address, as the administration frames technological supremacy as the only path to preventing a global conflict.",
     category: "Politics",
-    author: "EU Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/jetten/800/600"
+    author: "Defense Correspondent",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/pentagon/800/600"
   },
   {
     id: "poly-2",
-    title: "Israel: Domestic Dispute Threatens Reception for PM Modi’s Visit",
-    content: "Prime Minister Narendra Modi’s upcoming state visit to Israel is facing an unexpected hurdle due to Israeli domestic friction. Opposition leader Yair Lapid has threatened to boycott the parliamentary address unless the Supreme Court President is invited, a traditional protocol currently entangled in a heated debate over judicial overhaul. Despite the political drama in the Knesset, Prime Minister Netanyahu has reaffirmed the \"enduring bond\" between India and Israel ahead of the February 25 arrival.",
-    category: "Politics",
-    author: "Middle East Desk",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/israel/800/600"
+    title: "The \"Bridge Tariff\" Crisis: US Trade Policy in Limbo",
+    content: "While the Supreme Court may have struck down President Trump’s original \"Liberation Day\" tariffs on February 20, the White House effectively bypassed that ruling today by triggering Section 122 of the Trade Act of 1974. Starting at midnight, U.S. Customs began collecting a new 10% \"bridge tariff\" on nearly all global imports. This temporary measure is designed to last 150 days, serving as a legal placeholder while the administration attempts to negotiate more permanent trade laws with a reluctant Congress. The move has created absolute chaos in the global markets today; while the President had threatened a 15% rate on social media over the weekend, the actual implementation at 10% has left businesses in a state of \"expensive confusion.\" In London and Tokyo, trade ministers have expressed \"extreme frustration,\" noting that the sudden policy shifts make it nearly impossible for firms to calculate margins for goods currently in transit. This maneuver is being viewed by legal experts as a direct challenge to the Supreme Court’s authority, setting the stage for a constitutional showdown over who truly controls the nation's \"purse strings\" regarding international trade.",
+    category: "Economy",
+    author: "Trade Analyst",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/tariff/800/600"
   },
   {
     id: "poly-3",
-    title: "United States: Poll Shows Record Low Faith in \"Checks and Balances\"",
-    content: "On the eve of the 2026 State of the Union address, a new PBS News/NPR/Marist poll reveals that two-thirds of Americans believe the nation’s system of checks and balances is failing. Confidence has dropped significantly across the partisan spectrum, with many expressing doubt that the White House, Congress, and the courts are effectively dividing power. The data highlights a growing skepticism toward democratic institutions as President Trump prepares to address a polarized nation.",
+    title: "Escalating Tensions: The Taliban-Pakistan Airstrike Dispute",
+    content: "The geopolitical situation in South Asia has reached a boiling point today as UN Deputy Chief Rosemary DiCarlo engaged in a high-stakes phone call with the Taliban’s Foreign Ministry to discuss recent Pakistani airstrikes inside Afghan territory. These strikes, which took place over the weekend in the Nangarhar and Paktika provinces, reportedly killed 13 civilians, according to UN monitors. While Pakistan maintains the strikes were a necessary \"act of self-defense\" targeting TTP (Tehrik-i-Taliban Pakistan) militants who have been launching cross-border attacks, the Taliban government has formally filed a complaint with the UN Security Council, labeling the move a violation of sovereignty. Today, the situation grew even more complex as Iran offered to mediate between the two neighbors, fearing that a full-scale border war would destabilize the entire region and trigger a massive new wave of refugees. The UN is now under intense pressure to intervene before the escalating \"tit-for-tat\" skirmishes lead to a permanent breakdown of the fragile peace in the region.",
     category: "Politics",
-    author: "Washington Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/poll/800/600"
+    author: "Global Security Desk",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/southasia/800/600"
   },
   {
     id: "poly-4",
-    title: "Philippines: ICC to Hold Public Hearings on Duterte Era Charges",
-    content: "The International Criminal Court (ICC) has announced it will move forward with public hearings regarding charges against former President Rodrigo Duterte. The investigation focuses on alleged human rights violations during his \"war on drugs.\" The current administration in Manila remains divided on the issue, with some officials calling for cooperation with the ICC while others maintain that the Philippine judiciary is capable of handling the cases internally.",
+    title: "South Korea’s Legal Drama: Ousted President Yoon Appeals Life Sentence",
+    content: "In Seoul, the political world is transfixed by the legal battle of ousted President Yoon Suk Yeol, who today officially filed an appeal against his life sentence for the controversial martial law decree of late 2025. The Seoul High Court is now the center of a national divide; supporters of the former president held a massive rally outside the courthouse today, claiming the sentence is \"political revenge,\" while counter-protesters demanded the sentence be upheld to protect the country's democracy. This appeal comes at a time of extreme vulnerability for South Korea, as the current transitional government struggles to manage a slowing economy and a cooling relationship with Washington. The outcome of this case is seen as a litmus test for the independence of the South Korean judiciary and will likely dictate the country’s political stability for the remainder of the decade",
     category: "Politics",
-    author: "Asia Desk",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/philippines/800/600"
+    author: "Seoul Bureau",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/seoul/800/600"
   },
   {
     id: "poly-5",
-    title: "North Korea: Kim Jong Un Re-elected as Workers’ Party Chief",
-    content: "State media in Pyongyang confirmed today that Kim Jong Un has been re-elected as the General Secretary of the Workers' Party. The announcement came during a major party plenary session where leaders emphasized \"self-reliance\" and military modernization amidst ongoing global sanctions. Analysts suggest the move is intended to project absolute stability and long-term continuity as North Korea continues to expand its technological and nuclear capabilities.",
+    title: "Nigeria’s Constitutional Pivot: The Move Toward State Police",
+    content: "In a significant departure from Nigeria’s historically centralized security architecture, President Bola Tinubu used an interfaith fast gathering today in Abuja to signal a definitive push for the establishment of State Police. Addressing a diverse group of governors and religious leaders, the President emphasized that the current \"dark tunnel of uncertainty\" regarding national security can only be cleared by empowering local levels of government to protect their own citizens. This policy shift comes as a response to years of escalating banditry and kidnapping that have overwhelmed the federal police force. By promising that \"security is the foundation of prosperity,\" Tinubu is attempting to build a bipartisan consensus between Muslim and Christian leaders to support a constitutional amendment that would allow states to manage their own law enforcement. Critics, however, warn that without stringent federal oversight, state-controlled police could become tools for local political intimidation, setting the stage for a fierce legislative battle in the National Assembly over the coming months.",
     category: "Politics",
-    author: "Pyongyang Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/nkorea/800/600"
+    author: "Abuja Correspondent",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/nigeria/800/600"
   },
   {
     id: "poly-6",
-    title: "Brazil: President Lula Rejects \"New Cold War\" Narrative",
-    content: "Speaking to international media, Brazilian President Luiz Inácio Lula da Silva emphasized that Brazil has no interest in participating in a \"new Cold War\" between global superpowers. Lula stated his intention to meet with President Trump to advocate for a multipolar world where all nations are \"treated equally.\" He reiterated that Brazil’s foreign policy remains focused on economic growth, environmental protection, and maintaining trade relations with both the US and China.",
-    category: "Politics",
-    author: "South America Desk",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/brazil/800/600"
-  },
-  {
-    id: "poly-7",
-    title: "Mexico: Army Operation Leads to Significant Security Crisis",
-    content: "Following a high-stakes military operation that resulted in the death of a major cartel leader known as 'El Mencho', violence has erupted across several Mexican states. Security forces have been deployed to curb retaliatory attacks and roadblocks. President Claudia Sheinbaum has called for calm while defending the operation as a necessary step in the nation’s long-term strategy to dismantle organized crime networks and restore the rule of law.",
-    category: "Politics",
-    author: "Mexico City Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/mexico/800/600"
-  },
-  {
-    id: "poly-8",
-    title: "Canada: Legal Battle Intensifies Over High-Speed Rail Project",
-    content: "A coalition known as Alt-NO has launched a series of legal and public challenges against the federal government's planned high-speed rail line between Toronto and Quebec City. The group is specifically fighting \"Bill C-15,\" which would grant the government powers to expedite property expropriation for the project. Protesters argue that the focus should be on improving existing rail infrastructure rather than creating a costly new system that bypasses smaller communities.",
-    category: "Politics",
-    author: "Ottawa Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/canada/800/600"
-  },
-  {
-    id: "poly-9",
-    title: "India: J&K Apple Traders Raise Alarm Over New Trade Deals",
-    content: "Horticulture leaders in Jammu and Kashmir have expressed deep concern over recent trade agreements that reduce import duties on US and EU apples from 50% to 25%. Local orchardists argue that the move could flood the Indian market with cheaper foreign fruit, threatening the livelihoods of millions dependent on the region’s ₹10,000 crore apple industry. Political figures in Srinagar are now urging the central government to reconsider the tariffs to protect domestic farmers.",
-    category: "Politics",
-    author: "Srinagar Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/apple/800/600"
-  },
-  {
-    id: "poly-10",
-    title: "United Nations: Human Rights Council Opens with Warning on \"Normalization of Force\"",
-    content: "UN High Commissioner for Human Rights Volker Türk opened the latest session of the Human Rights Council in Geneva with a sharp critique of global leaders. Türk warned that the \"use of force\" is becoming normalized in international disputes, citing ongoing suffering in Gaza, Ukraine, Sudan, and Myanmar. He called on member states to act as \"persistent objectors\" to international law violations and to prioritize human dignity over geopolitical supremacy.",
-    category: "Politics",
-    author: "Geneva Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/un/800/600"
-  },
-  {
-    id: "poly-11",
-    title: "Japan: PM Takaichi Vows Defense Overhaul to Counter \"Coercion\"",
-    content: "Japanese Prime Minister Sanae Takaichi delivered a high-stakes address to parliament, pledging to overhaul the nation’s defense strategy and ease restrictions on military exports. Highlighting what she called \"increased coercion\" in the East and South China Seas, Takaichi reaffirmed her commitment to doubling Japan's defense spending to 2% of GDP. The move signals a more assertive regional security posture for Japan amidst growing tensions with Beijing.",
+    title: "Japan’s \"Ocean of Peace\" Initiative: Shinjiro Koizumi’s Pacific Strategy",
+    content: "Japanese Defense Minister Shinjiro Koizumi made a bold diplomatic play today in Tokyo, hosting defense chiefs from 14 Pacific island nations for the Japan Pacific Islands Defense Dialogue. Koizumi’s speech centered on building a \"multilayered network\" to ensure a \"free and open\" Indo-Pacific, explicitly stating that attempts to change the status quo by force—a veiled reference to China’s naval expansion—will not be tolerated. Simultaneously, the Japanese government revealed a strategic pivot toward Europe’s defense market, with high-level delegations currently visiting Finland and Sweden to match Japanese technological expertise with European dual-use military needs. This dual-track strategy marks a historic evolution in Japan’s post-war pacifist stance, as Tokyo seeks to reduce its defense reliance on the United States by becoming a primary security partner for both the Pacific islands and the European Union.",
     category: "Politics",
     author: "Tokyo Bureau",
-    date: "Feb 23, 2026",
+    date: "Feb 24, 2026",
     imageUrl: "https://picsum.photos/seed/japan/800/600"
   },
   {
-    id: "poly-12",
-    title: "Latin America: Mexico Defies US Pressure with Humanitarian Aid to Cuba",
-    content: "Mexican President Claudia Sheinbaum confirmed that her government will continue sending food and humanitarian aid to Cuba, despite threats of tariffs from Washington. This comes after the US administration cut off oil supplies to Havana following a leadership change in Venezuela. While Mexico has paused direct oil shipments, Sheinbaum’s stance highlights a growing rift in the region regarding the US-led embargo and the political isolation of the Caribbean island.",
+    id: "poly-7",
+    title: "The Brazil-US Standoff: Coup Convictions Meet Trade Retaliation",
+    content: "The diplomatic relationship between Brasília and Washington has reached its lowest point in decades following the recent conviction of former President Jair Bolsonaro for his role in the 2023 attempted coup. Today, as President Luiz Inácio Lula da Silva continues to laud the judiciary for \"fulfilling its role\" in protecting democracy, the administration is simultaneously grappling with the fallout of U.S.-imposed 50% tariffs on Brazilian goods. President Trump has labeled the trial a \"witch hunt\" and a personal attack on his ally, leading to a tit-for-tat economic war that has seen Brazil condemn the use of \"force against our democracy\" via economic coercion. With Lula now confirmed to seek re-election in the 2026 general election to prevent \"troglodytes\" from returning to power, Brazil is pivoting its trade focus toward the BRICS bloc and South Korea to offset the loss of the American market.",
     category: "Politics",
-    author: "Regional Desk",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/cuba/800/600"
+    author: "Brasília Bureau",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/brazil/800/600"
   },
   {
-    id: "poly-13",
-    title: "African Union: AU Summit Grapples with \"Legitimacy Crisis\" Among Youth",
-    content: "At the 39th African Union Summit in Addis Ababa, leaders are facing intense pressure to address a \"legitimacy crisis\" fueled by widespread youth discontent. With the continent home to the world’s youngest population, the AU is under fire for failing to prevent military coups and for its perceived silence on disputed elections. AU Commission Chairperson Mahamoud Ali Youssouf stressed that instability from Sudan to the Sahel continues to hinder the continent's development.",
-    category: "Politics",
-    author: "Addis Ababa Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/au/800/600"
+    id: "poly-8",
+    title: "African Union's Quest for \"Health Sovereignty\"",
+    content: "Following the conclusion of the 39th African Union Summit in Addis Ababa, the continent’s leaders today began implementing a landmark \"Health Sovereignty\" framework. With Tanzania’s President Samia Suluhu Hassan designated as the AU Champion for Reproductive and Maternal Health, the initiative seeks to drastically reduce Africa’s dependence on foreign aid and fragile global supply chains. The policy, which was a central pillar of the summit, mandates that member states increase domestic financing for health infrastructure to combat the fact that Sub-Saharan Africa still accounts for 70% of global maternal deaths. This movement toward self-reliance is being framed as a necessary survival tactic in a \"new world order\" where international partners, particularly the U.S., have significantly cut foreign humanitarian aid to prioritize domestic spending.",
+    category: "Health",
+    author: "Addis Ababa Desk",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/africa/800/600"
   },
   {
-    id: "poly-14",
-    title: "China: Beijing Assesses Impact of US Tariff Ruling",
-    content: "China’s Ministry of Commerce announced today that it is conducting a \"comprehensive assessment\" of the US Supreme Court's ruling against previous Trump-era tariffs. While welcoming the legal setback for Washington’s trade policy, Beijing urged the US to remove all \"unilateral and protectionist\" levies. Chinese officials reiterated that a trade war has no winners, even as they prepare retaliatory measures should the new 15% global tariff remain in place long-term.",
+    id: "poly-9",
+    title: "Philippine Power Struggle: Impeachment vs. 2028 Presidential Ambitions",
+    content: "The political landscape in Manila is currently defined by a high-stakes \"war of attrition\" between the House of Representatives and Vice President Sara Duterte. Today, as a fourth impeachment complaint was endorsed against her by Manila Representative Bienvenido Abante Jr., Duterte countered by officially announcing her 2028 presidential bid. Supporters view the impeachment attempts as a coordinated effort by the \"Lakas-CMD\" bloc to derail her political future, while opponents argue the Vice President is using her early campaign announcement to divert public attention from allegations of fund mismanagement. This domestic turmoil coincides with the Philippines' current ASEAN chairmanship, where the country is leading a critical review of the \"Five-Point Consensus\" on Myanmar, leaving many to wonder if the internal political infighting will diminish the Philippines' ability to lead on the regional stage.",
     category: "Politics",
-    author: "Beijing Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/china/800/600"
-  },
-  {
-    id: "poly-15",
-    title: "Global Security: Nigeria Pushes for South Sudan Election Roadmap",
-    content: "During the African Union summit, Nigerian Vice President Kashim Shettima called for the immediate release of opposition figures in South Sudan to pave the way for a national dialogue. Nigeria is leading a regional push to ensure that South Sudan’s delayed transition leads to transparent and peaceful national elections. The move is seen as part of Nigeria’s broader goal to stabilize conflict zones across the continent through diplomatic \"Regional Partnerships for Democracy.\"",
-    category: "Politics",
-    author: "Diplomatic Desk",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/southsudan/800/600"
-  },
-  {
-    id: "poly-16",
-    title: "United Kingdom: Labour Government Increases Local Funding for Hackney",
-    content: "In a move being watched closely across the UK, the Hackney Council has published a balanced budget for 2026/27, bolstered by a 25% increase in core funding from the national Labour government. The budget includes significant investments in social housing and homelessness prevention. This local success is being framed by the Labour party as a model for \"stable financial planning,\" even as they face national debates regarding the long-term sustainability of public spending.",
-    category: "Politics",
-    author: "London Bureau",
-    date: "Feb 23, 2026",
-    imageUrl: "https://picsum.photos/seed/hackney/800/600"
+    author: "Manila Bureau",
+    date: "Feb 24, 2026",
+    imageUrl: "https://picsum.photos/seed/manila/800/600"
   }
 ];
 
