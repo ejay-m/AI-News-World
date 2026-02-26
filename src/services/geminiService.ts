@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Modality } from "@google/genai";
 
 // This MUST match the name VITE_GEMINI_API_KEY exactly
 const API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
@@ -7,7 +7,7 @@ if (!API_KEY) {
   console.error("API Key not found! Check your Vercel settings. Make sure it starts with VITE_.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+export const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 // Persistent cache using localStorage
 const getCache = () => {
@@ -414,6 +414,51 @@ const FALLBACK_NEWS: NewsArticle[] = [
   }
 ];
 
+function pcmToWav(pcmBase64: string, sampleRate: number = 24000): Uint8Array {
+  const binaryString = atob(pcmBase64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  const wavHeader = new ArrayBuffer(44);
+  const view = new DataView(wavHeader);
+
+  // RIFF identifier
+  view.setUint32(0, 0x52494646, false); // "RIFF"
+  // file length
+  view.setUint32(4, 36 + len, true);
+  // RIFF type
+  view.setUint32(8, 0x57415645, false); // "WAVE"
+  // format chunk identifier
+  view.setUint32(12, 0x666d7420, false); // "fmt "
+  // format chunk length
+  view.setUint32(16, 16, true);
+  // sample format (PCM = 1)
+  view.setUint16(20, 1, true);
+  // channel count (Mono = 1)
+  view.setUint16(22, 1, true);
+  // sample rate
+  view.setUint32(24, sampleRate, true);
+  // byte rate (sample rate * block align)
+  view.setUint32(28, sampleRate * 2, true);
+  // block align (channel count * bytes per sample)
+  view.setUint16(32, 2, true);
+  // bits per sample
+  view.setUint16(34, 16, true);
+  // data chunk identifier
+  view.setUint32(36, 0x64617461, false); // "data"
+  // data chunk length
+  view.setUint32(40, len, true);
+
+  const wavData = new Uint8Array(44 + len);
+  wavData.set(new Uint8Array(wavHeader), 0);
+  wavData.set(bytes, 44);
+
+  return wavData;
+}
+
 async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 3000): Promise<T> {
   try {
     return await fn();
@@ -634,6 +679,48 @@ export const geminiService = {
     });
   },
 
+  async translateArticle(content: string, targetLanguage: string): Promise<string> {
+    const cacheKey = `translate_${content.substring(0, 50)}_${targetLanguage}`;
+    const cached = cache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return cached.data;
+    }
+
+    return withRetry(async () => {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: `Translate the following news article content into ${targetLanguage}. Maintain the original tone and facts. Do not add any extra commentary.\n\nContent: ${content}`,
+      });
+
+      const text = response.text || "Translation unavailable.";
+      cache.set(cacheKey, { data: text, timestamp: Date.now() });
+      saveCache(cache);
+      return text;
+    });
+  },
+
+  async generateSpeech(text: string): Promise<Uint8Array> {
+    return withRetry(async () => {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash-preview-tts",
+        contents: [{ parts: [{ text: `Read this news article clearly: ${text}` }] }],
+        config: {
+          responseModalities: [Modality.AUDIO],
+          speechConfig: {
+            voiceConfig: {
+              // 'Puck', 'Charon', 'Kore', 'Fenrir', 'Zephyr'
+              prebuiltVoiceConfig: { voiceName: 'Kore' },
+            },
+          },
+        },
+      });
+
+      const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+      if (!base64Audio) throw new Error("No audio generated");
+      return pcmToWav(base64Audio, 24000);
+    });
+  },
+
   async detectFakeNews(text: string): Promise<{ score: number; reasoning: string; sources: string[] }> {
     const cacheKey = `fake_${text.substring(0, 50)}`;
     const cached = cache.get(cacheKey);
@@ -669,25 +756,6 @@ export const geminiService = {
       } catch (e) {
         return { score: 50, reasoning: "Analysis failed.", sources: [] };
       }
-    });
-  },
-
-  async translateArticle(content: string, targetLang: string): Promise<string> {
-    const cacheKey = `trans_${content.substring(0, 50)}_${targetLang}`;
-    const cached = cache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      return cached.data;
-    }
-
-    return withRetry(async () => {
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Translate the following news article to ${targetLang}. Preserve the professional journalistic tone and adapt regional cultural context where appropriate.\n\nContent: ${content}`,
-      });
-
-      const text = response.text || content;
-      cache.set(cacheKey, { data: text, timestamp: Date.now() });
-      return text;
     });
   },
 
@@ -731,7 +799,8 @@ export const geminiService = {
     return withRetry(async () => {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `Based on this news article, generate 3 UPSC-style MCQs and 2 descriptive interview questions.\n\nContent: ${content}`,
+        contents: `Based on this news article, generate 3 high-quality multiple-choice questions for a competitive exam.
+        Content: ${content}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -750,8 +819,24 @@ export const geminiService = {
         cache.set(cacheKey, { data, timestamp: Date.now() });
         return data;
       } catch (e) {
-        return { questions: [], type: "Exam Mode" };
+        return { questions: ["What is the primary focus of this article?", "Who are the key stakeholders mentioned?", "What is the predicted outcome?"], type: "General Knowledge" };
       }
+    });
+  },
+
+  getLiveConnection(callbacks: any) {
+    return ai.live.connect({
+      model: "gemini-2.5-flash-native-audio-preview-09-2025",
+      callbacks,
+      config: {
+        responseModalities: [Modality.AUDIO],
+        speechConfig: {
+          voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
+        },
+        systemInstruction: "You are a concise news assistant. Discuss news and summarize articles briefly. Respond immediately.",
+        inputAudioTranscription: {},
+        outputAudioTranscription: {},
+      },
     });
   },
 

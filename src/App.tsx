@@ -11,6 +11,9 @@ import {
   ChevronRight, 
   ChevronLeft,
   Play,
+  Volume2,
+  VolumeX,
+  FileText,
   Globe,
   BookOpen,
   TrendingUp,
@@ -18,20 +21,23 @@ import {
   X,
   CheckCircle2,
   AlertTriangle,
-  FileText,
   Twitter,
+  ChevronDown,
   GraduationCap,
   MapPin,
   Trophy,
   Clock,
   Sparkles,
   MessageSquare,
-  Send
+  Send,
+  Zap,
+  Star
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
 import { geminiService, NewsArticle } from './services/geminiService';
 import { cn } from './lib/utils';
+import { VoiceAssistant } from './components/VoiceAssistant';
 
 // --- Components ---
 
@@ -44,9 +50,6 @@ const Navbar = ({ activePage, setActivePage }: { activePage: string, setActivePa
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-8">
             <div className="flex items-center cursor-pointer" onClick={() => setActivePage('Home')}>
-              <div className="mr-3">
-                <img src="/pngwing.com.png" alt="AI News World Logo" className="h-12 w-auto object-contain" onError={(e) => e.currentTarget.src='https://picsum.photos/seed/news/48/48'} />
-              </div>
               <span className="text-xl font-bold tracking-tighter flex items-center">
                 AI NEWS <span className="text-brand-orange ml-1">WORLD</span>
               </span>
@@ -135,6 +138,259 @@ const BreakingNews = () => (
     </div>
   </div>
 );
+
+const ArticleActions = ({ content }: { content: string }) => {
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const [isReadingMore, setIsReadingMore] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const [summary, setSummary] = useState<string | null>(null);
+  const [brief, setBrief] = useState<string | null>(null);
+  const [translatedText, setTranslatedText] = useState<string | null>(null);
+  const [currentLang, setCurrentLang] = useState('English');
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const requestIdRef = React.useRef(0);
+
+  // Close lang menu on outside click
+  useEffect(() => {
+    if (!isLangMenuOpen) return;
+    const handleOutsideClick = () => setIsLangMenuOpen(false);
+    window.addEventListener('click', handleOutsideClick);
+    return () => window.removeEventListener('click', handleOutsideClick);
+  }, [isLangMenuOpen]);
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.src = "";
+      }
+    };
+  }, [audio]);
+
+  const handleSpeak = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const currentId = ++requestIdRef.current;
+    
+    // If already speaking or loading, stop everything
+    if (isSpeaking || isLoadingAudio) {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      setIsSpeaking(false);
+      setIsLoadingAudio(false);
+      return;
+    }
+
+    setIsLoadingAudio(true);
+    try {
+      const wavBytes = await geminiService.generateSpeech(content);
+      
+      // Check if the request was cancelled during the async call
+      if (currentId !== requestIdRef.current) return;
+
+      const blob = new Blob([wavBytes], { type: 'audio/wav' });
+      const audioUrl = URL.createObjectURL(blob);
+      const newAudio = new Audio(audioUrl);
+      
+      newAudio.oncanplay = () => {
+        if (currentId !== requestIdRef.current) {
+          URL.revokeObjectURL(audioUrl);
+          return;
+        }
+        setIsLoadingAudio(false);
+        setIsSpeaking(true);
+        newAudio.play().catch(err => {
+          console.error("Playback failed", err);
+          setIsSpeaking(false);
+        });
+      };
+      
+      newAudio.onended = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      newAudio.onerror = (e) => {
+        console.error("Audio error", e);
+        setIsLoadingAudio(false);
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      setAudio(newAudio);
+    } catch (error) {
+      console.error("Speech generation failed", error);
+      setIsLoadingAudio(false);
+      setIsSpeaking(false);
+    }
+  };
+
+  const handleSummarize = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (summary) {
+      setSummary(null);
+      return;
+    }
+    setIsSummarizing(true);
+    try {
+      const text = await geminiService.summarizeArticle(content, "30-word");
+      setSummary(text);
+    } catch (error) {
+      console.error("Summarization failed", error);
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
+  const handleReadMore = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (brief) {
+      setBrief(null);
+      return;
+    }
+    setIsReadingMore(true);
+    try {
+      const text = await geminiService.summarizeArticle(content, "100-word");
+      setBrief(text);
+    } catch (error) {
+      console.error("Read More failed", error);
+    } finally {
+      setIsReadingMore(false);
+    }
+  };
+
+  const handleTranslate = async (lang: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (lang === 'English') {
+      setTranslatedText(null);
+      setCurrentLang('English');
+      return;
+    }
+    
+    setIsTranslating(true);
+    setIsLangMenuOpen(false);
+    try {
+      const text = await geminiService.translateArticle(content, lang);
+      setTranslatedText(text);
+      setCurrentLang(lang);
+    } catch (error) {
+      console.error("Translation failed", error);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  return (
+    <div className="space-y-3 mt-4">
+      <AnimatePresence>
+        {(summary || brief || translatedText) && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-brand-orange/5 border border-brand-orange/10 p-3 rounded-xl text-xs font-medium text-brand-dark italic leading-relaxed overflow-hidden"
+          >
+            <div className="flex items-center gap-2 mb-1 text-brand-orange font-bold uppercase text-[9px]">
+              {summary ? <FileText className="w-3 h-3" /> : brief ? <BookOpen className="w-3 h-3" /> : <Languages className="w-3 h-3" />}
+              {summary ? "AI Summary" : brief ? "Brief Version" : `Translated (${currentLang})`}
+            </div>
+            {summary || brief || translatedText}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="flex flex-wrap items-center gap-2">
+        <button 
+          onClick={handleSpeak}
+          disabled={isLoadingAudio && !isSpeaking}
+          className={cn(
+            "flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all",
+            (isSpeaking || isLoadingAudio) ? "bg-brand-orange text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+          )}
+        >
+          {isLoadingAudio ? (
+            <RefreshCw className="w-3 h-3 animate-spin" />
+          ) : isSpeaking ? (
+            <VolumeX className="w-3 h-3" />
+          ) : (
+            <Volume2 className="w-3 h-3" />
+          )}
+          {isLoadingAudio ? "Loading..." : isSpeaking ? "Stop" : "Listen"}
+        </button>
+        <button 
+          onClick={handleSummarize}
+          disabled={isSummarizing}
+          className={cn(
+            "flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all",
+            summary ? "bg-brand-dark text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+          )}
+        >
+          {isSummarizing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <FileText className="w-3 h-3" />}
+          {isSummarizing ? "Summarizing..." : summary ? "Show Original" : "Summarize"}
+        </button>
+        <button 
+          onClick={handleReadMore}
+          disabled={isReadingMore}
+          className={cn(
+            "flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all",
+            brief ? "bg-brand-blue text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+          )}
+        >
+          {isReadingMore ? <RefreshCw className="w-3 h-3 animate-spin" /> : <BookOpen className="w-3 h-3" />}
+          {isReadingMore ? "Loading..." : brief ? "Hide Brief" : "Read More"}
+        </button>
+
+        <div className="relative">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsLangMenuOpen(!isLangMenuOpen);
+            }}
+            disabled={isTranslating}
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all",
+              currentLang !== 'English' ? "bg-emerald-600 text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+            )}
+          >
+            {isTranslating ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Languages className="w-3 h-3" />}
+            {isTranslating ? "Translating..." : currentLang === 'English' ? "Language" : currentLang}
+            <ChevronDown className={cn("w-3 h-3 transition-transform", isLangMenuOpen && "rotate-180")} />
+          </button>
+          
+          <AnimatePresence>
+            {isLangMenuOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                className="absolute bottom-full mb-2 left-0 bg-white border border-gray-100 rounded-xl shadow-2xl p-2 z-50 min-w-[140px]"
+              >
+                <div className="text-[8px] font-black text-gray-300 uppercase tracking-widest px-3 py-1 mb-1">Select Language</div>
+                {['English', 'Tamil', 'Malayalam', 'Hindi'].map(lang => (
+                  <button
+                    key={lang}
+                    onClick={(e) => handleTranslate(lang, e)}
+                    className={cn(
+                      "w-full text-left px-3 py-2 text-[10px] font-bold uppercase hover:bg-gray-50 rounded-lg transition-colors flex items-center justify-between",
+                      currentLang === lang ? "text-emerald-600 bg-emerald-50" : "text-gray-600"
+                    )}
+                  >
+                    {lang}
+                    {currentLang === lang && <CheckCircle2 className="w-3 h-3" />}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ArticleCard = ({ article }: { article: NewsArticle }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -229,6 +485,8 @@ const ArticleCard = ({ article }: { article: NewsArticle }) => {
         <p className="text-xs text-gray-500 line-clamp-2">
           {article.content}
         </p>
+        
+        <ArticleActions content={article.content} />
         
         <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter pt-2 border-t border-gray-50">
           <span>{article.author}</span>
@@ -422,6 +680,113 @@ const FakeNewsDetector = () => {
 
 // --- Pages ---
 
+const GlobalBriefings = () => {
+  const briefings = [
+    {
+      category: "Geopolitical Intelligence",
+      icon: <Globe className="w-5 h-5" />,
+      items: [
+        {
+          title: "Ukraine Conflict Anniversary",
+          content: "Today marks exactly four years since the start of the war. President Zelenskyy reaffirmed Ukraine’s commitment to the struggle, even as internal divisions among Western allies complicate further aid packages. Meanwhile, the UK has announced its largest-ever sanctions package against Russia, targeting the oil pipeline operator Transneft."
+        },
+        {
+          title: "North Korean Power Shift",
+          content: "During a high-profile party congress, Kim Jong Un pledged a major five-year economic push. Notably, his sister, Kim Yo Jong, has been further elevated within the party hierarchy, signaling a tightening of the family’s grip on state policy."
+        },
+        {
+          title: "ASEAN Diplomacy",
+          content: "The Philippines is leading commemorations for the 50th Anniversary of the Treaty of Amity and Cooperation (TAC), a cornerstone agreement for regional peace in Southeast Asia."
+        }
+      ]
+    },
+    {
+      category: "Economic & Market Analysis",
+      icon: <TrendingUp className="w-5 h-5" />,
+      items: [
+        {
+          title: "US Tariff Volatility",
+          content: "Following a Supreme Court ruling that struck down emergency trade measures, the US has officially implemented a 10% tariff on all non-exempt goods. This is lower than the 15% rate previously threatened but has still caused ripples of uncertainty across global equity indices."
+        },
+        {
+          title: "Monetary Policy & Security",
+          content: "The Bank of Israel has signaled that geopolitical tensions with Iran are now the primary driver of its interest rate decisions, overriding traditional domestic indicators like inflation and currency strength."
+        }
+      ]
+    },
+    {
+      category: "Science & Technology",
+      icon: <Zap className="w-5 h-5" />,
+      items: [
+        {
+          title: "Artemis II Delay",
+          content: "NASA has pushed the historic Artemis II lunar mission back to at least April 2026. The delay stems from a persistent helium flow issue in the moon rocket that engineers need more time to resolve."
+        },
+        {
+          title: "Climate Data Transparency",
+          content: "The UN, in partnership with Microsoft, has launched the Climate Data Hub. This AI-enabled platform centralizes climate data from over 190 countries to track real-time progress on Paris Agreement targets."
+        },
+        {
+          title: "AI Productivity",
+          content: "Global markets are closely watching a surge in AI-driven productivity gains, though investors remain cautious about the potential for labor market disruption in the tech and services sectors."
+        }
+      ]
+    },
+    {
+      category: "Global Spotlights",
+      icon: <Star className="w-5 h-5" />,
+      items: [
+        {
+          title: "Milan’s Olympic Legacy",
+          content: "As the Milan-Cortina 2026 Winter Games conclude their main events, the city is transitioning into a \"legacy phase,\" with the Olympic Village being converted into much-needed student housing for the region’s 10 universities."
+        },
+        {
+          title: "India-Japan Relations",
+          content: "The 7th edition of the \"Dharma Guardian\" joint military exercise has commenced in Uttarakhand, focusing on jungle and semi-urban warfare coordination."
+        }
+      ]
+    }
+  ];
+
+  return (
+    <section className="py-20 border-t border-gray-100">
+      <div className="flex items-center gap-4 mb-16">
+        <div className="w-12 h-1 bg-brand-orange"></div>
+        <h2 className="text-4xl font-black uppercase tracking-tighter">Global Briefings</h2>
+        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-auto">Intelligence Report • Feb 2026</span>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        {briefings.map((section, idx) => (
+          <div key={idx} className="space-y-8">
+            <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+              <div className="p-2 bg-gray-50 rounded-lg text-brand-orange">
+                {section.icon}
+              </div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-brand-dark">
+                {section.category}
+              </h3>
+            </div>
+            
+            <div className="space-y-10">
+              {section.items.map((item, i) => (
+                <div key={i} className="group cursor-default">
+                  <h4 className="text-sm font-bold mb-2 group-hover:text-brand-orange transition-colors duration-300 leading-tight">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-gray-500 leading-relaxed font-medium">
+                    {item.content}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
 const HomePage = ({ news }: { news: NewsArticle[] }) => {
   // Separate static news from dynamic news
   const staticNews = news.filter(a => a.id.startsWith('static-'));
@@ -465,6 +830,7 @@ const HomePage = ({ news }: { news: NewsArticle[] }) => {
               <p className="text-white/70 text-xl mb-10 line-clamp-2 max-w-2xl font-medium leading-relaxed">
                 {featured.content}
               </p>
+              <ArticleActions content={featured.content} />
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-4 text-white/40 text-[10px] font-bold uppercase tracking-widest">
                   <span>By {featured.author}</span>
@@ -528,6 +894,7 @@ const HomePage = ({ news }: { news: NewsArticle[] }) => {
                         )}>
                           {a.content}
                         </p>
+                        <ArticleActions content={a.content} />
                       </div>
                       {isFeatured && (
                         <div className="hidden md:block w-1/3 aspect-[3/4] rounded-2xl overflow-hidden border border-gray-100 shadow-inner">
@@ -552,82 +919,59 @@ const HomePage = ({ news }: { news: NewsArticle[] }) => {
         <FakeNewsDetector />
       </div>
 
-      {/* Main News Feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-        <div className="lg:col-span-8 space-y-16">
-          <div className="flex items-center justify-between border-b border-gray-100 pb-6">
-            <h2 className="text-3xl font-bold uppercase tracking-tighter">Latest Stories</h2>
-            <div className="flex items-center gap-4">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sort by: Newest</span>
+      {/* Trending & Must Read Section */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-16 border-t border-gray-100 pt-20">
+        <div className="lg:col-span-4 bg-brand-dark rounded-3xl p-10 text-white relative overflow-hidden h-fit">
+          <div className="relative z-10">
+            <TrendingUp className="text-brand-orange w-8 h-8 mb-6" />
+            <h3 className="text-2xl font-bold mb-4 leading-tight">Trending Topics</h3>
+            <p className="text-white/50 text-sm mb-8">AI-curated topics currently shaping the global conversation.</p>
+            <div className="flex flex-wrap gap-2">
+              {['Tariffs', 'SpaceX', 'AI Ethics', 'Climate', 'Elections'].map(tag => (
+                <span key={tag} className="px-3 py-1.5 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-brand-orange transition-colors cursor-pointer">
+                  #{tag}
+                </span>
+              ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-            {others.map((article) => (
-              <ArticleCard key={article.id} article={article} />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/20 blur-3xl rounded-full -mr-16 -mt-16"></div>
+        </div>
+
+        <div className="lg:col-span-8">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="w-8 h-8 bg-brand-orange rounded-lg flex items-center justify-center text-white">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-brand-dark">Must Read Stories</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {others.slice(0, 3).map((a, i) => (
+              <div key={a.id} className="group cursor-pointer">
+                <div className="text-5xl font-black text-gray-100 group-hover:text-brand-orange/20 transition-colors mb-4">0{i + 1}</div>
+                <h4 className="text-sm font-bold leading-tight mb-3 group-hover:text-brand-orange transition-colors line-clamp-2">
+                  {a.title}
+                </h4>
+                <p className="text-[10px] text-gray-400 font-medium line-clamp-2 mb-4">{a.content}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{a.category}</span>
+                  <span className="text-[8px] font-bold text-gray-300 uppercase">{a.date}</span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Sidebar */}
-        <aside className="lg:col-span-4 space-y-16">
-          <div className="sticky top-32 space-y-16">
-            <div className="bg-brand-dark rounded-3xl p-10 text-white relative overflow-hidden">
-              <div className="relative z-10">
-                <TrendingUp className="text-brand-orange w-8 h-8 mb-6" />
-                <h3 className="text-2xl font-bold mb-4 leading-tight">Trending Topics</h3>
-                <p className="text-white/50 text-sm mb-8">AI-curated topics currently shaping the global conversation.</p>
-                <div className="flex flex-wrap gap-2">
-                  {['Tariffs', 'SpaceX', 'AI Ethics', 'Climate', 'Elections'].map(tag => (
-                    <span key={tag} className="px-3 py-1.5 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-brand-orange transition-colors cursor-pointer">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/20 blur-3xl rounded-full -mr-16 -mt-16"></div>
-            </div>
-
-            <div className="space-y-8">
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-brand-orange">Must Read</h3>
-              <div className="space-y-8">
-                {others.slice(0, 3).map((a, i) => (
-                  <div key={a.id} className="flex gap-6 group">
-                    <span className="text-4xl font-black text-gray-100 group-hover:text-brand-orange/20 transition-colors">0{i + 1}</span>
-                    <div>
-                      <h4 className="text-sm font-bold leading-tight mb-2 group-hover:text-brand-orange transition-colors">
-                        {a.title}
-                      </h4>
-                      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{a.category} • {a.date}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </aside>
+      {/* Main News Feed */}
+      <div className="space-y-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-16">
+          {others.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
+        </div>
       </div>
       {/* Global Briefings Section */}
-      <section className="py-20 border-t border-gray-100">
-        <div className="flex items-center justify-between mb-12">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-brand-dark rounded-2xl flex items-center justify-center text-white">
-              <Globe className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold uppercase tracking-tighter">Global Briefings</h2>
-              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Real-time intelligence from around the world</p>
-            </div>
-          </div>
-          <div className="hidden md:flex gap-2">
-            <button className="p-3 rounded-xl border border-gray-200 hover:border-brand-orange hover:text-brand-orange transition-all">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button className="p-3 rounded-xl border border-gray-200 hover:border-brand-orange hover:text-brand-orange transition-all">
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
+      <section className="py-12 border-t border-gray-100">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {dynamicNews.slice(0, 6).map((a, i) => (
             <div key={a.id} className="group cursor-pointer">
@@ -645,6 +989,7 @@ const HomePage = ({ news }: { news: NewsArticle[] }) => {
               <p className="text-gray-500 text-sm line-clamp-3 mb-4 font-medium leading-relaxed">
                 {a.content}
               </p>
+              <ArticleActions content={a.content} />
               <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">By {a.author}</span>
                 <span className="text-[9px] font-bold text-gray-300 uppercase">{a.date}</span>
@@ -653,6 +998,8 @@ const HomePage = ({ news }: { news: NewsArticle[] }) => {
           ))}
         </div>
       </section>
+
+      <GlobalBriefings />
 
       <Newsletter />
     </div>
@@ -678,6 +1025,8 @@ const PoliticsPage = ({ news }: { news: NewsArticle[] }) => {
               <div className="absolute bottom-0 left-0 p-8 w-full">
                 <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">{featured.category}</span>
                 <h1 className="text-4xl text-white mb-4 leading-tight font-bold group-hover:text-brand-orange transition-colors">{featured.title}</h1>
+                <p className="text-white/70 text-sm mb-6 max-w-xl line-clamp-2">{featured.content}</p>
+                <ArticleActions content={featured.content} />
                 <div className="flex items-center gap-4 text-white/60 text-[10px] font-bold uppercase">
                   <span>{featured.date}</span>
                   <span className="w-1 h-1 bg-white/20 rounded-full"></span>
@@ -789,6 +1138,7 @@ const PoliticsPage = ({ news }: { news: NewsArticle[] }) => {
                         )}>
                           {a.content}
                         </p>
+                        <ArticleActions content={a.content} />
                       </div>
                       {isFeatured && (
                         <div className="hidden md:block w-1/4 aspect-square rounded-xl overflow-hidden border border-gray-100">
@@ -808,7 +1158,7 @@ const PoliticsPage = ({ news }: { news: NewsArticle[] }) => {
         </section>
       )}
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {others.map(a => (
           <ArticleCard key={a.id} article={a} />
         ))}
@@ -851,6 +1201,7 @@ const SportsPage = ({ news }: { news: NewsArticle[] }) => {
                 <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">{heroArticle.category}</span>
                 <h1 className="text-4xl text-white mb-4 leading-tight font-bold group-hover:text-brand-orange transition-colors">{heroArticle.title}</h1>
                 <p className="text-white/70 text-sm mb-6 max-w-xl line-clamp-2">{heroArticle.content}</p>
+                <ArticleActions content={heroArticle.content} />
                 <div className="flex items-center gap-6 text-white/40 text-[10px] font-bold uppercase">
                   <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {heroArticle.date}</span>
                   <span className="flex items-center gap-1"><User className="w-3 h-3" /> {heroArticle.author}</span>
@@ -971,6 +1322,7 @@ const SportsPage = ({ news }: { news: NewsArticle[] }) => {
                         )}>
                           {a.content}
                         </p>
+                        <ArticleActions content={a.content} />
                       </div>
                       {isFeatured && (
                         <div className="hidden md:block w-1/4 aspect-square rounded-xl overflow-hidden border border-gray-100">
@@ -990,7 +1342,7 @@ const SportsPage = ({ news }: { news: NewsArticle[] }) => {
         </section>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {otherNews.filter(a => !a.id.startsWith('sports-')).map(a => (
           <div key={a.id} className="group">
             <div className="relative h-64 rounded-2xl overflow-hidden mb-4">
@@ -1001,6 +1353,7 @@ const SportsPage = ({ news }: { news: NewsArticle[] }) => {
             </div>
             <h3 className="text-xl font-bold mb-2 group-hover:text-brand-orange transition-colors">{a.title}</h3>
             <p className="text-xs text-gray-500 line-clamp-2">{a.content}</p>
+            <ArticleActions content={a.content} />
           </div>
         ))}
       </div>
@@ -1027,6 +1380,7 @@ const LifestylePage = ({ news }: { news: NewsArticle[] }) => {
             <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-4 inline-block">{heroArticle.category}</span>
             <h1 className="text-5xl text-white mb-4 leading-tight max-w-2xl font-bold group-hover:text-brand-orange transition-colors">{heroArticle.title}</h1>
             <p className="text-white/80 text-lg max-w-xl line-clamp-2">{heroArticle.content}</p>
+            <ArticleActions content={heroArticle.content} />
           </div>
         </section>
       )}
@@ -1095,6 +1449,7 @@ const LifestylePage = ({ news }: { news: NewsArticle[] }) => {
                         )}>
                           {a.content}
                         </p>
+                        <ArticleActions content={a.content} />
                       </div>
                       {isFeatured && (
                         <div className="hidden md:block w-1/4 aspect-square rounded-xl overflow-hidden border border-gray-100">
@@ -1114,49 +1469,53 @@ const LifestylePage = ({ news }: { news: NewsArticle[] }) => {
         </section>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2 space-y-12">
-          <section>
-            <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-8">
-              <h2 className="text-2xl uppercase tracking-tighter">Latest Lifestyle News</h2>
-              <button className="text-brand-orange text-[10px] font-bold uppercase">View All</button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {otherNews.filter(a => !a.id.startsWith('life-')).slice(0, 6).map(a => (
-                <ArticleCard key={a.id} article={a} />
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <aside className="space-y-12">
-          <div className="bg-brand-orange rounded-3xl p-8 text-white">
-            <Bell className="w-8 h-8 mb-6" />
-            <h3 className="text-2xl font-bold mb-4">The Lifestyle Digest</h3>
-            <p className="text-white/80 text-sm mb-8">The best of travel, food, and wellness delivered to your inbox every Saturday morning.</p>
-            <input type="email" placeholder="Your email address" className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-sm mb-4 placeholder:text-white/50 focus:outline-none" />
-            <button className="w-full bg-white text-brand-orange py-3 rounded-xl font-bold uppercase text-xs tracking-widest">Subscribe Now</button>
+      <div className="space-y-16">
+        <section>
+          <div className="flex items-center justify-between border-b border-gray-100 pb-6 mb-10">
+            <h2 className="text-3xl font-bold uppercase tracking-tighter">Latest Lifestyle News</h2>
+            <button className="text-brand-orange text-[10px] font-bold uppercase tracking-widest">View All Stories</button>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {otherNews.filter(a => !a.id.startsWith('life-')).slice(0, 8).map(a => (
+              <ArticleCard key={a.id} article={a} />
+            ))}
+          </div>
+        </section>
 
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-brand-orange mb-6 flex items-center gap-2">
-              <RefreshCw className="w-4 h-4" /> The Edit
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 border-t border-gray-100 pt-16">
+          <div className="lg:col-span-8">
+            <div className="bg-brand-orange rounded-3xl p-10 text-white h-full flex flex-col justify-center relative overflow-hidden">
+              <div className="relative z-10">
+                <Bell className="w-10 h-10 mb-6" />
+                <h3 className="text-3xl font-bold mb-4">The Lifestyle Digest</h3>
+                <p className="text-white/80 text-lg mb-10 max-w-xl">The best of travel, food, and wellness delivered to your inbox every Saturday morning. Join 50,000+ subscribers.</p>
+                <div className="flex flex-col sm:flex-row gap-4 max-w-md">
+                  <input type="email" placeholder="Your email address" className="flex-1 bg-white/20 border border-white/30 rounded-xl px-6 py-4 text-sm placeholder:text-white/50 focus:outline-none focus:bg-white/30 transition-all" />
+                  <button className="bg-white text-brand-orange px-10 py-4 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-gray-50 transition-all">Subscribe</button>
+                </div>
+              </div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full -mr-32 -mt-32"></div>
+            </div>
+          </div>
+          <div className="lg:col-span-4 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-brand-orange mb-8 flex items-center gap-2">
+              <RefreshCw className="w-4 h-4" /> The Lifestyle Edit
             </h3>
-            <div className="space-y-6">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="flex gap-4 group cursor-pointer">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0">
-                    <img src={`https://picsum.photos/seed/edit${i}/200/200`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <div className="space-y-8">
+              {otherNews.slice(0, 4).map((a, i) => (
+                <div key={a.id} className="flex gap-6 group cursor-pointer">
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-gray-50">
+                    <img src={a.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
                   </div>
-                  <div>
-                    <h4 className="text-sm font-bold leading-tight mb-1 group-hover:text-brand-orange transition-colors">Sustainable Accessories to Watch in 2024</h4>
-                    <span className="text-[9px] font-bold text-gray-400 uppercase">Elegance & Ethics</span>
+                  <div className="flex flex-col justify-center">
+                    <h4 className="text-sm font-bold leading-tight mb-2 group-hover:text-brand-orange transition-colors line-clamp-2">{a.title}</h4>
+                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{a.category}</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </aside>
+        </div>
       </div>
       <Newsletter />
     </div>
@@ -1327,9 +1686,6 @@ const Footer = () => (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
         <div className="col-span-1 md:col-span-1">
           <div className="flex items-center mb-6">
-            <div className="bg-white p-1 rounded-lg mr-2">
-              <FileText className="text-brand-dark w-5 h-5" />
-            </div>
             <span className="text-xl font-bold tracking-tighter">
               AI NEWS <span className="text-brand-orange ml-1">WORLD</span>
             </span>
@@ -1502,6 +1858,7 @@ export default function App() {
 
       <Footer />
       <Chatbot news={news} />
+      <VoiceAssistant />
     </div>
   );
 }
