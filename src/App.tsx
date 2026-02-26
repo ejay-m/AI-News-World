@@ -41,9 +41,184 @@ import { VoiceAssistant } from './components/VoiceAssistant';
 
 // --- Components ---
 
-const Navbar = ({ activePage, setActivePage }: { activePage: string, setActivePage: (p: string) => void }) => {
+const LoginPage = ({ onLogin }: { onLogin: (name: string, email: string) => void }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name && email) {
+      onLogin(name, email);
+    }
+  };
+
+  const features = [
+    {
+      icon: <MessageSquare className="w-6 h-6 text-brand-orange" />,
+      title: "AI Chat Assistant",
+      description: "Converse with every story. Ask questions, get context, and dive deeper into the headlines."
+    },
+    {
+      icon: <Zap className="w-6 h-6 text-brand-orange" />,
+      title: "Smart Summaries",
+      description: "Save time with AI-generated versions of long-form reports and global news."
+    },
+    {
+      icon: <Languages className="w-6 h-6 text-brand-orange" />,
+      title: "Real-Time Translation",
+      description: "Breaking news has no borders. Instantly translate any article into your preferred language."
+    },
+    {
+      icon: <Clock className="w-6 h-6 text-brand-orange" />,
+      title: "24/7 Live Pulse",
+      description: "Continuous updates and live-tracked market shifts, refreshed every second."
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      <main className="flex-1 flex flex-col lg:flex-row">
+        {/* Left Side: Feature Showcase */}
+        <div className="lg:w-1/2 bg-brand-dark p-12 lg:p-24 flex flex-col justify-center text-white relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-orange rounded-full blur-[120px]"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-brand-blue rounded-full blur-[100px]"></div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10"
+          >
+            <div className="mb-12">
+              <span className="text-brand-orange text-xs font-black uppercase tracking-[0.4em] mb-4 block">AI NEWS WORLD</span>
+              <h1 className="text-5xl lg:text-7xl font-bold leading-[0.9] tracking-tighter mb-6">
+                Welcome to the Future of Information.
+              </h1>
+              <p className="text-xl text-white/60 font-medium max-w-md leading-relaxed">
+                Access your personalized AI-driven newsroom and stay ahead of the curve.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {features.map((f, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + i * 0.1 }}
+                  className="space-y-3"
+                >
+                  <div className="p-3 bg-white/5 rounded-2xl w-fit border border-white/10">
+                    {f.icon}
+                  </div>
+                  <h3 className="text-lg font-bold">{f.title}</h3>
+                  <p className="text-sm text-white/40 leading-relaxed font-medium">
+                    {f.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right Side: Login Form */}
+        <div className="lg:w-1/2 p-12 lg:p-24 flex flex-col justify-center bg-gray-50/50">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-md w-full mx-auto"
+          >
+            <div className="mb-12">
+              <h2 className="text-3xl font-bold tracking-tighter text-brand-dark mb-2">Get Started</h2>
+              <p className="text-gray-500 font-medium">Enter your details to access the newsroom.</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Name</label>
+                <input
+                  required
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your Name"
+                  className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all outline-none font-medium"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Email Address</label>
+                <input
+                  required
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="yourname@email.com"
+                  className="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all outline-none font-medium"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-brand-orange text-white py-5 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm shadow-2xl shadow-brand-orange/20 hover:bg-opacity-90 transition-all transform hover:-translate-y-1"
+              >
+                open the web
+              </button>
+
+              <div className="relative py-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-gray-50 px-4 text-gray-400 font-bold tracking-widest">or continue with</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="w-full bg-white border border-gray-200 text-brand-dark py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-gray-50 transition-all"
+              >
+                <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
+                Google Account
+              </button>
+            </form>
+          </motion.div>
+        </div>
+      </main>
+
+      {/* Developer Footer */}
+      <footer className="py-12 bg-gray-50/50 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-sm font-bold text-brand-dark mb-2 uppercase tracking-tighter">
+            Proudly developed by Ejay M & G Karthik
+          </p>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">
+            SMIT Students | batch of 2022
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+const Navbar = ({ activePage, setActivePage, onSearch, user, onSignOut }: { activePage: string, setActivePage: (p: string) => void, onSearch: (q: string) => void, user: { name: string, email: string } | null, onSignOut: () => void }) => {
   const navItems = ['Home', 'General News', 'Sports', 'Politics', 'Lifestyle'];
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      onSearch(searchQuery);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,15 +249,76 @@ const Navbar = ({ activePage, setActivePage }: { activePage: string, setActivePa
               <div className="w-2 h-2 bg-red-600 rounded-full"></div>
               <span className="text-[10px] font-black uppercase tracking-widest">Live Updates</span>
             </div>
-            <button className="p-2 text-gray-500 hover:text-brand-orange transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
-            <button className="hidden sm:block bg-brand-orange text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-opacity-90 transition-all">
-              SUBSCRIBE
-            </button>
-            <button className="p-2 text-gray-500 hover:text-brand-orange transition-colors">
-              <User className="w-5 h-5" />
-            </button>
+            
+            <div className="relative">
+              <AnimatePresence>
+                {isSearchOpen && (
+                  <motion.form 
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: 300, opacity: 1 }}
+                    exit={{ width: 0, opacity: 0 }}
+                    onSubmit={handleSearchSubmit}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center"
+                  >
+                    <input 
+                      autoFocus
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search real-time news..."
+                      className="w-full pl-4 pr-10 py-2 bg-gray-100 border-none rounded-full text-sm focus:ring-2 focus:ring-brand-orange"
+                    />
+                    <button type="submit" className="absolute right-3 text-gray-400 hover:text-brand-orange">
+                      <Search className="w-4 h-4" />
+                    </button>
+                  </motion.form>
+                )}
+              </AnimatePresence>
+              <button 
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="p-2 text-gray-500 hover:text-brand-orange transition-colors"
+              >
+                {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+              </button>
+            </div>
+
+            <div className="relative">
+              <button 
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="p-2 text-gray-500 hover:text-brand-orange transition-colors"
+              >
+                <User className="w-5 h-5" />
+              </button>
+              
+              <AnimatePresence>
+                {isProfileOpen && user && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-2 w-64 bg-white border border-gray-100 rounded-2xl shadow-2xl p-6 z-50"
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 bg-brand-orange/10 rounded-full flex items-center justify-center text-brand-orange">
+                        <User className="w-6 h-6" />
+                      </div>
+                      <div className="overflow-hidden">
+                        <p className="text-sm font-bold text-brand-dark truncate">{user.name}</p>
+                        <p className="text-[10px] text-gray-400 font-medium truncate">{user.email}</p>
+                      </div>
+                    </div>
+                    <div className="pt-4 border-t border-gray-50">
+                      <button 
+                        onClick={onSignOut}
+                        className="w-full text-left text-[10px] font-bold uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
@@ -109,14 +345,20 @@ const UpdateBar = ({ onRefresh, loading, region, setRegion }: { onRefresh: () =>
           </select>
         </div>
         
-        <button 
-          onClick={onRefresh}
-          disabled={loading}
-          className="flex items-center gap-2 bg-brand-blue/10 text-brand-blue px-6 py-2 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-brand-blue hover:text-white transition-all disabled:opacity-50"
-        >
-          <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
-          Update 24 * 7 News
-        </button>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={onRefresh}
+            disabled={loading}
+            className="flex items-center gap-2 bg-brand-blue/10 text-brand-blue px-6 py-2 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-brand-blue hover:text-white transition-all disabled:opacity-50"
+          >
+            <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+            Update 24 * 7 News
+          </button>
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100">
+            <Globe className="w-3 h-3" />
+            <span className="text-[9px] font-bold uppercase tracking-widest">Grounded in Google Search</span>
+          </div>
+        </div>
 
         <div className="hidden lg:flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-green-500" />
@@ -550,26 +792,43 @@ const FakeNewsDetector = () => {
 
   return (
     <section 
-      className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm mb-12"
+      className="relative bg-brand-dark rounded-[2rem] p-1 lg:p-12 mb-12 overflow-hidden shadow-2xl"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="flex flex-col md:flex-row gap-8 items-center">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-4">
-            <ShieldCheck className="text-brand-orange w-6 h-6" />
-            <h2 className="text-2xl font-bold uppercase tracking-tighter">Fake News Detector</h2>
-          </div>
-          <p className="text-gray-600 mb-6 max-w-xl">
-            Upload a screenshot to verify news authenticity instantly. Our AI-powered tool cross-references multiple verified sources to provide a reliability score.
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-brand-orange rounded-full blur-[150px]"></div>
+        <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[40%] bg-brand-blue rounded-full blur-[120px]"></div>
+      </div>
+
+      <div className="relative z-10 flex flex-col lg:flex-row gap-12 items-stretch">
+        <div className="flex-1 flex flex-col justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 mb-6"
+          >
+            <div className="p-3 bg-brand-orange/20 rounded-2xl border border-brand-orange/30">
+              <ShieldCheck className="text-brand-orange w-8 h-8" />
+            </div>
+            <div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-white tracking-tighter uppercase">Fake News Detector</h2>
+              <p className="text-brand-orange text-[10px] font-black uppercase tracking-[0.3em]">AI-Powered Verification</p>
+            </div>
+          </motion.div>
+
+          <p className="text-white/60 text-lg mb-8 max-w-xl leading-relaxed font-medium">
+            Combat misinformation with our advanced neural verification engine. Upload any news snippet or headline to instantly verify its authenticity against global data streams.
           </p>
+
           <div className="flex flex-wrap gap-4">
             <button 
               onClick={() => fileInputRef.current?.click()} 
-              className="flex items-center gap-2 bg-brand-dark text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all"
+              className="group flex items-center gap-3 bg-white text-brand-dark px-8 py-4 rounded-2xl font-bold hover:bg-brand-orange hover:text-white transition-all transform hover:-translate-y-1 shadow-lg"
             >
-              <Upload className="w-5 h-5" />
-              UPLOAD LOCAL IMAGE
+              <Upload className="w-5 h-5 group-hover:animate-bounce" />
+              SELECT IMAGE
             </button>
             <input 
               type="file" 
@@ -581,27 +840,45 @@ const FakeNewsDetector = () => {
             {imagePreview && !isAnalyzing && (
               <button 
                 onClick={handleScan} 
-                className="flex items-center gap-2 bg-brand-blue text-white px-8 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all animate-pulse"
+                className="flex items-center gap-3 bg-brand-orange text-white px-10 py-4 rounded-2xl font-bold hover:bg-opacity-90 transition-all transform hover:-translate-y-1 shadow-xl shadow-brand-orange/20"
               >
                 <RefreshCw className="w-5 h-5" />
-                SCAN NOW
+                INITIATE SCAN
               </button>
             )}
           </div>
+
+          <div className="mt-8 flex items-center gap-4 text-white/30 text-[10px] font-black uppercase tracking-widest">
+            <div className="flex -space-x-2">
+              {[1,2,3].map(i => (
+                <div key={i} className="w-6 h-6 rounded-full border-2 border-brand-dark bg-gray-800 flex items-center justify-center">
+                  <Globe className="w-3 h-3" />
+                </div>
+              ))}
+            </div>
+            <span>Cross-referencing 500+ sources</span>
+          </div>
         </div>
         
-        <div className="w-full md:w-80 flex flex-col gap-4">
-          <div className="relative w-full aspect-video md:aspect-square bg-gray-50 rounded-2xl overflow-hidden border-2 border-dashed border-gray-200 flex items-center justify-center">
+        <div className="w-full lg:w-[400px] flex flex-col gap-6">
+          <div className="relative w-full aspect-square bg-white/5 rounded-[2.5rem] overflow-hidden border-2 border-dashed border-white/10 flex items-center justify-center group">
             {imagePreview ? (
-              <img 
-                src={imagePreview} 
-                className="w-full h-full object-cover" 
-                alt="Preview" 
-              />
+              <div className="relative w-full h-full p-4">
+                <img 
+                  src={imagePreview} 
+                  className="w-full h-full object-cover rounded-[1.5rem] shadow-2xl" 
+                  alt="Preview" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent pointer-events-none"></div>
+              </div>
             ) : (
-              <div className="text-center p-6">
-                <Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                <p className="text-[10px] font-bold text-gray-400 uppercase">Drop image here or use controls</p>
+              <div className="text-center p-12 transition-all group-hover:scale-110">
+                <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/10">
+                  <Upload className="w-8 h-8 text-white/20" />
+                </div>
+                <p className="text-xs font-bold text-white/40 uppercase tracking-widest leading-relaxed">
+                  Drop evidence here<br/><span className="text-[10px] opacity-50 font-medium">PNG, JPG, WEBP</span>
+                </p>
               </div>
             )}
             
@@ -611,10 +888,15 @@ const FakeNewsDetector = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center"
+                  className="absolute inset-0 bg-brand-dark/80 backdrop-blur-md flex flex-col items-center justify-center z-20"
                 >
-                  <RefreshCw className="w-8 h-8 text-brand-orange animate-spin mb-2" />
-                  <span className="text-xs font-bold text-gray-500 uppercase">Analyzing Content...</span>
+                  <div className="relative mb-6">
+                    <RefreshCw className="w-16 h-16 text-brand-orange animate-spin" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-8 h-8 bg-brand-orange rounded-full animate-ping opacity-20"></div>
+                    </div>
+                  </div>
+                  <span className="text-sm font-black text-white uppercase tracking-[0.3em] animate-pulse">Analyzing Neural Patterns...</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -623,51 +905,65 @@ const FakeNewsDetector = () => {
           <AnimatePresence>
             {result && !isAnalyzing && (
               <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
                 className={cn(
-                  "rounded-2xl p-6 border",
-                  result.score > 70 ? "bg-green-50 border-green-100" : "bg-red-50 border-red-100"
+                  "rounded-[2.5rem] p-8 border-2 shadow-2xl relative overflow-hidden",
+                  result.score > 70 
+                    ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
+                    : "bg-rose-500/10 border-rose-500/20 text-rose-400"
                 )}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <span className={cn(
-                    "text-xs font-bold uppercase",
-                    result.score > 70 ? "text-green-700" : "text-red-700"
-                  )}>Authenticity Score</span>
-                  <span className={cn(
-                    "text-2xl font-black",
-                    result.score > 70 ? "text-green-600" : "text-red-600"
-                  )}>{result.score}%</span>
-                </div>
-                
-                <div className="text-center mb-6 py-2 border-y border-current/10">
-                  <span className={cn(
-                    "text-3xl font-black uppercase tracking-widest",
-                    result.score > 70 ? "text-green-600" : "text-red-600"
-                  )}>
-                    {result.score > 70 ? "IT IS REAL" : "IT IS FAKE"}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 h-2 rounded-full mb-4 overflow-hidden">
-                  <div 
-                    className={cn(
-                      "h-full rounded-full transition-all duration-1000",
-                      result.score > 70 ? "bg-green-500" : "bg-red-500"
-                    )} 
-                    style={{ width: `${result.score}%` }}
-                  ></div>
-                </div>
-                <p className={cn(
-                  "text-xs mb-4 font-medium leading-relaxed",
-                  result.score > 70 ? "text-green-800" : "text-red-800"
-                )}>
-                  {result.reasoning}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {result.sources.map((s: string) => (
-                    <span key={s} className="text-[9px] bg-white px-2 py-1 rounded border border-current/10 font-bold uppercase">{s}</span>
-                  ))}
+                {/* Result Glow */}
+                <div className={cn(
+                  "absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-30",
+                  result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
+                )}></div>
+
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Verification Result</span>
+                      <h3 className="text-4xl font-black tracking-tighter">
+                        {result.score > 70 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
+                      </h3>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-5xl font-black tracking-tighter leading-none">{result.score}%</span>
+                      <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Confidence</p>
+                    </div>
+                  </div>
+                  
+                  <div className="w-full bg-white/5 h-3 rounded-full mb-8 overflow-hidden p-0.5 border border-white/5">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${result.score}%` }}
+                      transition={{ duration: 1.5, ease: "easeOut" }}
+                      className={cn(
+                        "h-full rounded-full shadow-[0_0_20px_rgba(0,0,0,0.3)]",
+                        result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
+                      )} 
+                    ></motion.div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
+                      <p className="text-xs font-semibold leading-relaxed text-white/80 italic">
+                        "{result.reasoning}"
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Verified Sources</p>
+                      <div className="flex flex-wrap gap-2">
+                        {result.sources.map((s: string) => (
+                          <span key={s} className="text-[9px] bg-white/5 text-white/60 px-3 py-1.5 rounded-full border border-white/10 font-bold uppercase tracking-wider">
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -1744,11 +2040,44 @@ const Footer = () => (
 // --- Main App ---
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<{ name: string, email: string } | null>(null);
   const [activePage, setActivePage] = useState('Home');
-  const [news, setNews] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [news, setNews] = useState<NewsArticle[]>(geminiService.getStoredNews('General'));
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [region, setRegion] = useState('Global');
+
+  const handleLogin = (name: string, email: string) => {
+    setUser({ name, email });
+    setIsLoggedIn(true);
+  };
+
+  const handleSignOut = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    setNews([]);
+    setActivePage('Home');
+  };
+
+  const handleSearch = async (query: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const results = await geminiService.searchRealTimeNews(query);
+      if (results.length > 0) {
+        setNews(results);
+        setActivePage(`Search: ${query}`);
+      } else {
+        setError(`No real-time news found for "${query}"`);
+      }
+    } catch (err) {
+      console.error("Search failed", err);
+      setError("Failed to search real-time news.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadNews = async (force: boolean = false) => {
     const category = (activePage === 'Home' || activePage === 'General News') ? 'General' : activePage;
@@ -1785,6 +2114,9 @@ export default function App() {
   useEffect(() => {
     // On page or region change, try to load from cache
     // But don't trigger a network request automatically
+    if (!isLoggedIn) return;
+    if (activePage.startsWith('Search:')) return;
+
     const category = (activePage === 'Home' || activePage === 'General News') ? 'General' : activePage;
     const prompt = region === 'Global' ? category : `${category} news focusing on ${region}`;
     const cached = geminiService.getCachedNews(prompt);
@@ -1794,9 +2126,9 @@ export default function App() {
       setLoading(false);
       setError(null);
     } else {
-      // If no cache, we can either show fallback or empty state
-      // The user wants to avoid automatic updates
-      setNews([]);
+      // If no cache, load the default stored news for the category
+      const stored = geminiService.getStoredNews(category);
+      setNews(stored);
       setLoading(false);
       setError(null);
     }
@@ -1804,61 +2136,67 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar activePage={activePage} setActivePage={setActivePage} />
-      <UpdateBar onRefresh={() => loadNews(true)} loading={loading} region={region} setRegion={setRegion} />
-      <BreakingNews />
-      
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        {loading && news.length === 0 ? (
-          <div className="h-[60vh] flex flex-col items-center justify-center text-gray-400">
-            <RefreshCw className="w-16 h-16 animate-spin mb-6 text-brand-orange" />
-            <h2 className="text-xl font-bold uppercase tracking-[0.2em]">AI is gathering the latest news...</h2>
-          </div>
-        ) : error ? (
-          <div className="h-[60vh] flex flex-col items-center justify-center text-center">
-            <AlertTriangle className="w-16 h-16 text-brand-orange mb-6" />
-            <h2 className="text-2xl font-bold text-brand-dark mb-4 uppercase tracking-tighter">{error}</h2>
-            <p className="text-gray-500 mb-8 max-w-md">We're experiencing high demand. Our AI journalists are taking a short break. Please try again shortly.</p>
-            <button 
-              onClick={() => loadNews(true)}
-              className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-opacity-90 transition-all flex items-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              RETRY NOW
-            </button>
-          </div>
-        ) : news.length === 0 ? (
-          <div className="h-[60vh] flex flex-col items-center justify-center text-center">
-            <BookOpen className="w-16 h-16 text-gray-200 mb-6" />
-            <h2 className="text-2xl font-bold text-brand-dark mb-4 uppercase tracking-tighter">No Stored News for {activePage}</h2>
-            <p className="text-gray-500 mb-8 max-w-md">You haven't updated the news for this category yet. Click the button below to fetch the latest AI-generated stories.</p>
-            <button 
-              onClick={() => loadNews(true)}
-              className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-opacity-90 transition-all flex items-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              FETCH LATEST NEWS
-            </button>
-          </div>
-        ) : (
-          <motion.div
-            key={activePage}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            {activePage === 'Home' && <HomePage news={news} />}
-            {activePage === 'General News' && <HomePage news={news} />}
-            {activePage === 'Politics' && <PoliticsPage news={news} />}
-            {activePage === 'Sports' && <SportsPage news={news} />}
-            {activePage === 'Lifestyle' && <LifestylePage news={news} />}
-          </motion.div>
-        )}
-      </main>
+      {!isLoggedIn ? (
+        <LoginPage onLogin={handleLogin} />
+      ) : (
+        <>
+          <Navbar activePage={activePage} setActivePage={setActivePage} onSearch={handleSearch} user={user} onSignOut={handleSignOut} />
+          <UpdateBar onRefresh={() => loadNews(true)} loading={loading} region={region} setRegion={setRegion} />
+          <BreakingNews />
+          
+          <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+            {loading && news.length === 0 ? (
+              <div className="h-[60vh] flex flex-col items-center justify-center text-gray-400">
+                <RefreshCw className="w-16 h-16 animate-spin mb-6 text-brand-orange" />
+                <h2 className="text-xl font-bold uppercase tracking-[0.2em]">AI is gathering the latest news...</h2>
+              </div>
+            ) : error ? (
+              <div className="h-[60vh] flex flex-col items-center justify-center text-center">
+                <AlertTriangle className="w-16 h-16 text-brand-orange mb-6" />
+                <h2 className="text-2xl font-bold text-brand-dark mb-4 uppercase tracking-tighter">{error}</h2>
+                <p className="text-gray-500 mb-8 max-w-md">We're experiencing high demand. Our AI journalists are taking a short break. Please try again shortly.</p>
+                <button 
+                  onClick={() => loadNews(true)}
+                  className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-opacity-90 transition-all flex items-center gap-2"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  RETRY NOW
+                </button>
+              </div>
+            ) : news.length === 0 ? (
+              <div className="h-[60vh] flex flex-col items-center justify-center text-center">
+                <BookOpen className="w-16 h-16 text-gray-200 mb-6" />
+                <h2 className="text-2xl font-bold text-brand-dark mb-4 uppercase tracking-tighter">No Stored News for {activePage}</h2>
+                <p className="text-gray-500 mb-8 max-w-md">You haven't updated the news for this category yet. Click the button below to fetch the latest AI-generated stories.</p>
+                <button 
+                  onClick={() => loadNews(true)}
+                  className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-opacity-90 transition-all flex items-center gap-2"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  FETCH LATEST NEWS
+                </button>
+              </div>
+            ) : (
+              <motion.div
+                key={activePage}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                {activePage === 'Home' && <HomePage news={news} />}
+                {activePage === 'General News' && <HomePage news={news} />}
+                {activePage === 'Politics' && <PoliticsPage news={news} />}
+                {activePage === 'Sports' && <SportsPage news={news} />}
+                {activePage === 'Lifestyle' && <LifestylePage news={news} />}
+              </motion.div>
+            )}
+          </main>
 
-      <Footer />
-      <Chatbot news={news} />
-      <VoiceAssistant />
+          <Footer />
+          <Chatbot news={news} />
+          <VoiceAssistant />
+        </>
+      )}
     </div>
   );
 }

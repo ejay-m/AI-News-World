@@ -39,7 +39,7 @@ const saveCache = (map: Map<string, { data: any; timestamp: number }>) => {
 const cache = getCache();
 const CACHE_TTL = 1000 * 60 * 60 * 24; // 24 hours for persistent cache
 
-const STATIC_NEWS: NewsArticle[] = [
+export const STATIC_NEWS: NewsArticle[] = [
   {
     id: "static-1",
     title: "The 2026 Pentagon AI Surge: A $153 Billion Bet on Digital Warfare",
@@ -123,7 +123,7 @@ const STATIC_NEWS: NewsArticle[] = [
   }
 ];
 
-const STATIC_SPORTS_NEWS: NewsArticle[] = [
+export const STATIC_SPORTS_NEWS: NewsArticle[] = [
   {
     id: "sports-1",
     title: "Winter Olympics: USA Ends 46-Year Gold Drought in Ice Hockey",
@@ -207,7 +207,7 @@ const STATIC_SPORTS_NEWS: NewsArticle[] = [
   }
 ];
 
-const STATIC_POLITICAL_NEWS: NewsArticle[] = [
+export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
   {
     id: "poly-1",
     title: "The 2026 Pentagon AI Surge: A $153 Billion Bet on Digital Warfare",
@@ -459,15 +459,17 @@ function pcmToWav(pcmBase64: string, sampleRate: number = 24000): Uint8Array {
   return wavData;
 }
 
-async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 3000): Promise<T> {
+async function withRetry<T>(fn: () => Promise<T>, retries = 3, delay = 2000): Promise<T> {
   try {
     return await fn();
   } catch (error: any) {
     const isRateLimit = error?.message?.includes("429") || error?.status === 429 || error?.code === 429;
-    if (isRateLimit && retries > 0) {
-      console.warn(`Rate limit hit. Retrying in ${delay}ms... (${retries} retries left)`);
+    const isInternalError = error?.message?.includes("500") || error?.status === 500 || error?.code === 500 || error?.message?.includes("Internal error");
+    
+    if ((isRateLimit || isInternalError) && retries > 0) {
+      console.warn(`API error (${isRateLimit ? '429' : '500'}). Retrying in ${delay}ms... (${retries} retries left)`);
       await new Promise(resolve => setTimeout(resolve, delay));
-      return withRetry(fn, retries - 1, delay * 2);
+      return withRetry(fn, retries - 1, delay * 1.5);
     }
     throw error;
   }
@@ -485,6 +487,44 @@ export interface NewsArticle {
 }
 
 export const geminiService = {
+  async searchRealTimeNews(query: string): Promise<NewsArticle[]> {
+    return withRetry(async () => {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: `Search for real-time news related to: "${query}". 
+        Provide the most accurate and up-to-date information available.
+        Return them as a JSON array of objects with: id, title, content (at least 200 words), category, author, date, and a descriptive imageUrl placeholder.`,
+        config: {
+          tools: [{ googleSearch: {} }],
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                id: { type: Type.STRING },
+                title: { type: Type.STRING },
+                content: { type: Type.STRING },
+                category: { type: Type.STRING },
+                author: { type: Type.STRING },
+                date: { type: Type.STRING },
+                imageUrl: { type: Type.STRING },
+              },
+              required: ["id", "title", "content", "category", "author", "date", "imageUrl"],
+            },
+          },
+        },
+      });
+
+      try {
+        return JSON.parse(response.text || "[]");
+      } catch (e) {
+        console.error("Failed to parse search results", e);
+        return [];
+      }
+    });
+  },
+
   async chatWithNews(message: string, newsContext: NewsArticle[]): Promise<string> {
     const context = newsContext.map(a => `Title: ${a.title}\nContent: ${a.content.substring(0, 300)}...`).join('\n\n');
     
@@ -513,9 +553,11 @@ export const geminiService = {
     return withRetry(async () => {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `Generate 10 highly realistic and current news articles for the category: ${category}. 
-        Return them as a JSON array of objects with: id, title, content (at least 200 words), category, author, date, and a descriptive imageUrl placeholder (e.g., https://picsum.photos/seed/news1/800/600).`,
+        contents: `Search for the 5 most recent and relevant news for the category: ${category}. 
+        Focus on events happening right now or in the last 24 hours.
+        Return them as a JSON array of objects with: id, title, content (around 100 words), category, author, date, and a descriptive imageUrl placeholder (e.g., https://picsum.photos/seed/news1/800/600).`,
         config: {
+          tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
           responseSchema: {
             type: Type.ARRAY,
@@ -699,16 +741,28 @@ export const geminiService = {
     });
   },
 
+  // Simple memory cache for audio to speed up repeated listens
+  audioCache: new Map<string, Uint8Array>(),
+
   async generateSpeech(text: string): Promise<Uint8Array> {
+    // Truncate text to 500 characters for significantly faster generation
+    // Most users only listen to the first few paragraphs anyway
+    const cleanText = text.substring(0, 500).replace(/[#*`]/g, '').trim();
+    
+    // Check cache first
+    const cacheKey = cleanText.substring(0, 100);
+    if (this.audioCache.has(cacheKey)) {
+      return this.audioCache.get(cacheKey)!;
+    }
+
     return withRetry(async () => {
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash-preview-tts",
-        contents: [{ parts: [{ text: `Read this news article clearly: ${text}` }] }],
+        contents: [{ parts: [{ text: cleanText }] }],
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
             voiceConfig: {
-              // 'Puck', 'Charon', 'Kore', 'Fenrir', 'Zephyr'
               prebuiltVoiceConfig: { voiceName: 'Kore' },
             },
           },
@@ -717,7 +771,13 @@ export const geminiService = {
 
       const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
       if (!base64Audio) throw new Error("No audio generated");
-      return pcmToWav(base64Audio, 24000);
+      
+      const wavData = pcmToWav(base64Audio, 24000);
+      
+      // Store in cache
+      this.audioCache.set(cacheKey, wavData);
+      
+      return wavData;
     });
   },
 
@@ -833,11 +893,19 @@ export const geminiService = {
         speechConfig: {
           voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
         },
-        systemInstruction: "You are a concise news assistant. Discuss news and summarize articles briefly. Respond immediately.",
+        tools: [{ googleSearch: {} }],
+        systemInstruction: "You are a concise news assistant. Use Google Search to find the most up-to-date and accurate news information. Summarize articles briefly and respond immediately.",
         inputAudioTranscription: {},
         outputAudioTranscription: {},
       },
     });
+  },
+
+  getStoredNews(category: string): NewsArticle[] {
+    const cat = category.toLowerCase();
+    if (cat.includes("sports")) return STATIC_SPORTS_NEWS;
+    if (cat.includes("politics")) return STATIC_POLITICAL_NEWS;
+    return STATIC_NEWS;
   },
 
   async analyzeNewsImage(base64Image: string, mimeType: string): Promise<{ score: number; reasoning: string; sources: string[] }> {
