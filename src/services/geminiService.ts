@@ -46,7 +46,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "In a move that signaling a fundamental shift in American military doctrine, the Pentagon announced today it is fast-tracking $153 billion in new funding for 2026 to modernize the U.S. military with advanced Artificial Intelligence (AI) and autonomous systems. This funding, which was originally slated to be spread over five years, is being \"compressed\" into a single fiscal year to ensure the U.S. maintains a technological edge over China's rapidly advancing \"intelligentized\" warfare capabilities. The Department of Defense report emphasizes that these funds will be poured into AI-driven missile defense, autonomous naval \"ghost fleets,\" and battlefield data-processing tools designed to make split-second decisions. However, the acceleration has sparked a fierce debate in the House Armed Services Committee, where critics argue that such massive, rapid spending bypasses essential oversight and risks deploying lethal autonomous systems before ethical guardrails are fully matured. This \"AI Arms Race\" spending is expected to be a central theme of tonight’s State of the Union address, as the administration frames technological supremacy as the only path to preventing a global conflict.",
     category: "Politics",
     author: "Defense Correspondent",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/pentagon/800/600"
   },
   {
@@ -55,7 +55,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "While the Supreme Court may have struck down President Trump’s original \"Liberation Day\" tariffs on February 20, the White House effectively bypassed that ruling today by triggering Section 122 of the Trade Act of 1974. Starting at midnight, U.S. Customs began collecting a new 10% \"bridge tariff\" on nearly all global imports. This temporary measure is designed to last 150 days, serving as a legal placeholder while the administration attempts to negotiate more permanent trade laws with a reluctant Congress. The move has created absolute chaos in the global markets today; while the President had threatened a 15% rate on social media over the weekend, the actual implementation at 10% has left businesses in a state of \"expensive confusion.\" In London and Tokyo, trade ministers have expressed \"extreme frustration,\" noting that the sudden policy shifts make it nearly impossible for firms to calculate margins for goods currently in transit. This maneuver is being viewed by legal experts as a direct challenge to the Supreme Court’s authority, setting the stage for a constitutional showdown over who truly controls the nation's \"purse strings\" regarding international trade.",
     category: "Economy",
     author: "Trade Analyst",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/tariff/800/600"
   },
   {
@@ -64,7 +64,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "The geopolitical situation in South Asia has reached a boiling point today as UN Deputy Chief Rosemary DiCarlo engaged in a high-stakes phone call with the Taliban’s Foreign Ministry to discuss recent Pakistani airstrikes inside Afghan territory. These strikes, which took place over the weekend in the Nangarhar and Paktika provinces, reportedly killed 13 civilians, according to UN monitors. While Pakistan maintains the strikes were a necessary \"act of self-defense\" targeting TTP (Tehrik-i-Taliban Pakistan) militants who have been launching cross-border attacks, the Taliban government has formally filed a complaint with the UN Security Council, labeling the move a violation of sovereignty. Today, the situation grew even more complex as Iran offered to mediate between the two neighbors, fearing that a full-scale border war would destabilize the entire region and trigger a massive new wave of refugees. The UN is now under intense pressure to intervene before the escalating \"tit-for-tat\" skirmishes lead to a permanent breakdown of the fragile peace in the region.",
     category: "General",
     author: "Global Security Desk",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/southasia/800/600"
   },
   {
@@ -73,7 +73,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "In Seoul, the political world is transfixed by the legal battle of ousted President Yoon Suk Yeol, who today officially filed an appeal against his life sentence for the controversial martial law decree of late 2025. The Seoul High Court is now the center of a national divide; supporters of the former president held a massive rally outside the courthouse today, claiming the sentence is \"political revenge,\" while counter-protesters demanded the sentence be upheld to protect the country's democracy. This appeal comes at a time of extreme vulnerability for South Korea, as the current transitional government struggles to manage a slowing economy and a cooling relationship with Washington. The outcome of this case is seen as a litmus test for the independence of the South Korean judiciary and will likely dictate the country’s political stability for the remainder of the decade",
     category: "Politics",
     author: "Seoul Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/seoul/800/600"
   },
   {
@@ -82,7 +82,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "In a significant departure from Nigeria’s historically centralized security architecture, President Bola Tinubu used an interfaith fast gathering today in Abuja to signal a definitive push for the establishment of State Police. Addressing a diverse group of governors and religious leaders, the President emphasized that the current \"dark tunnel of uncertainty\" regarding national security can only be cleared by empowering local levels of government to protect their own citizens. This policy shift comes as a response to years of escalating banditry and kidnapping that have overwhelmed the federal police force. By promising that \"security is the foundation of prosperity,\" Tinubu is attempting to build a bipartisan consensus between Muslim and Christian leaders to support a constitutional amendment that would allow states to manage their own law enforcement. Critics, however, warn that without stringent federal oversight, state-controlled police could become tools for local political intimidation, setting the stage for a fierce legislative battle in the National Assembly over the coming months.",
     category: "Politics",
     author: "Abuja Correspondent",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/nigeria/800/600"
   },
   {
@@ -91,7 +91,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "Japanese Defense Minister Shinjiro Koizumi made a bold diplomatic play today in Tokyo, hosting defense chiefs from 14 Pacific island nations for the Japan Pacific Islands Defense Dialogue. Koizumi’s speech centered on building a \"multilayered network\" to ensure a \"free and open\" Indo-Pacific, explicitly stating that attempts to change the status quo by force—a veiled reference to China’s naval expansion—will not be tolerated. Simultaneously, the Japanese government revealed a strategic pivot toward Europe’s defense market, with high-level delegations currently visiting Finland and Sweden to match Japanese technological expertise with European dual-use military needs. This dual-track strategy marks a historic evolution in Japan’s post-war pacifist stance, as Tokyo seeks to reduce its defense reliance on the United States by becoming a primary security partner for both the Pacific islands and the European Union.",
     category: "Politics",
     author: "Tokyo Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/japan/800/600"
   },
   {
@@ -100,7 +100,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "The diplomatic relationship between Brasília and Washington has reached its lowest point in decades following the recent conviction of former President Jair Bolsonaro for his role in the 2023 attempted coup. Today, as President Luiz Inácio Lula da Silva continues to laud the judiciary for \"fulfilling its role\" in protecting democracy, the administration is simultaneously grappling with the fallout of U.S.-imposed 50% tariffs on Brazilian goods. President Trump has labeled the trial a \"witch hunt\" and a personal attack on his ally, leading to a tit-for-tat economic war that has seen Brazil condemn the use of \"force against our democracy\" via economic coercion. With Lula now confirmed to seek re-election in the 2026 general election to prevent \"troglodytes\" from returning to power, Brazil is pivoting its trade focus toward the BRICS bloc and South Korea to offset the loss of the American market.",
     category: "Politics",
     author: "Brasília Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/brazil/800/600"
   },
   {
@@ -109,7 +109,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "Following the conclusion of the 39th African Union Summit in Addis Ababa, the continent’s leaders today began implementing a landmark \"Health Sovereignty\" framework. With Tanzania’s President Samia Suluhu Hassan designated as the AU Champion for Reproductive and Maternal Health, the initiative seeks to drastically reduce Africa’s dependence on foreign aid and fragile global supply chains. The policy, which was a central pillar of the summit, mandates that member states increase domestic financing for health infrastructure to combat the fact that Sub-Saharan Africa still accounts for 70% of global maternal deaths. This movement toward self-reliance is being framed as a necessary survival tactic in a \"new world order\" where international partners, particularly the U.S., have significantly cut foreign humanitarian aid to prioritize domestic spending.",
     category: "Health",
     author: "Addis Ababa Desk",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/africa/800/600"
   },
   {
@@ -118,7 +118,7 @@ export const STATIC_NEWS: NewsArticle[] = [
     content: "The political landscape in Manila is currently defined by a high-stakes \"war of attrition\" between the House of Representatives and Vice President Sara Duterte. Today, as a fourth impeachment complaint was endorsed against her by Manila Representative Bienvenido Abante Jr., Duterte countered by officially announcing her 2028 presidential bid. Supporters view the impeachment attempts as a coordinated effort by the \"Lakas-CMD\" bloc to derail her political future, while opponents argue the Vice President is using her early campaign announcement to divert public attention from allegations of fund mismanagement. This domestic turmoil coincides with the Philippines' current ASEAN chairmanship, where the country is leading a critical review of the \"Five-Point Consensus\" on Myanmar, leaving many to wonder if the internal political infighting will diminish the Philippines' ability to lead on the regional stage.",
     category: "Politics",
     author: "Manila Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/manila/800/600"
   }
 ];
@@ -130,7 +130,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "The Milano Cortina 2026 Winter Games concluded with a historic victory for Team USA as they defeated longtime rival Canada 2-1 in a thrilling overtime final. Jack Hughes scored the \"Golden Goal\" to secure the first American men’s ice hockey gold since the 1980 \"Miracle on Ice.\" The Games officially closed with Norway topping the medal table for the third consecutive time with 18 golds, while cross-country skier Johannes Høsflot Klæbo set a new world record by winning six gold medals in a single Olympic edition.",
     category: "Sports",
     author: "Olympic Desk",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/hockey/800/600"
   },
   {
@@ -139,7 +139,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "In a high-stakes encounter at the Narendra Modi Stadium, South Africa defeated India by 76 runs to shake up the T20 World Cup Super 8 standings. India’s chase faltered against a disciplined Proteas bowling attack, complicating their path to the semi-finals. Meanwhile, Zimbabwe has emerged as the \"Cinderella team\" of the tournament; after a rain-washed draw against Ireland knocked out powerhouse Australia, Zimbabwe is now preparing for a critical Super 8 showdown against the West Indies in Mumbai.",
     category: "Sports",
     author: "Cricket Bureau",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/cricket/800/600"
   },
   {
@@ -148,7 +148,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "American golfer Jacob Bridgeman secured his first-ever PGA Tour victory at the prestigious Genesis Invitational on Sunday. Bridgeman held his nerve under immense pressure at Riviera, shooting a final-round 72 to finish at 18-under par. He managed to hold off a late surge from world number one Rory McIlroy and Kurt Kitayama, who both finished just one stroke behind. The emotional victory marks a career-defining moment for the 26-year-old rising star.",
     category: "Sports",
     author: "Golf Digest",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/golf/800/600"
   },
   {
@@ -157,7 +157,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "In the latest NBA action, Jaylen Brown powered the Boston Celtics to a season sweep of the Los Angeles Lakers, delivering a dominant performance that solidified the Celtics' lead in the Eastern Conference. Elsewhere, the San Antonio Spurs have extended their winning streak to eight games, led by the unstoppable Victor Wembanyama, whose defensive prowess and scoring have catapulted the Spurs into serious playoff contention.",
     category: "Sports",
     author: "NBA Insider",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/nba/800/600"
   },
   {
@@ -166,7 +166,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "On the ATP circuit, Argentina’s Tomas Martin Etcheverry claimed his maiden ATP 500 title at the Rio Open, defeating Chile's Alejandro Tabilo in a grueling three-set battle. Meanwhile, in Asia, Greece’s Stefanos Sakellaridis lifted the Delhi Open 2026 singles trophy after a convincing win over Oliver Crawford. Both players have seen significant jumps in the world rankings following their successful weekend runs on clay and hard courts respectively",
     category: "Sports",
     author: "Tennis World",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/tennis/800/600"
   },
   {
@@ -175,7 +175,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "The 2026 Formula 1 pre-season testing kicked off in Bahrain, marking Lewis Hamilton’s highly anticipated official debut in the scarlet red of Ferrari. Under the new 2026 engine regulations, Ferrari’s power unit showed impressive reliability, with Hamilton clocking the second-fastest time of the day. Meanwhile, Red Bull’s Max Verstappen remained the man to beat, leading the charts and signaling that the rivalry between the two multi-time world champions is set to reach a fever pitch this season.",
     category: "Sports",
     author: "F1 Correspondent",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/f1/800/600"
   },
   {
@@ -184,7 +184,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "In a classic European heavyweight clash, Real Madrid secured a narrow 2-1 victory over Bayern Munich in the first leg of their Champions League Round of 16 tie. Vinícius Júnior was the standout performer, scoring a stunning solo goal in the 78th minute to silence the Allianz Arena. Bayern, led by Harry Kane, struggled to break down a disciplined Madrid defense, leaving them with a mountain to climb in the return leg at the Santiago Bernabéu next week.",
     category: "Sports",
     author: "Football Weekly",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/football/800/600"
   },
   {
@@ -193,7 +193,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "Dutch superstar Femke Bol has once again rewritten the history books at the World Athletics Indoor Tour in Liévin. Bol shattered her own world record in the 400 meters, clocking a blistering 49.12 seconds. Her dominant performance cements her status as the favorite for the upcoming World Indoor Championships and serves as a warning shot to her rivals ahead of the summer outdoor season.",
     category: "Sports",
     author: "Track & Field",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/athletics/800/600"
   },
   {
@@ -202,7 +202,7 @@ export const STATIC_SPORTS_NEWS: NewsArticle[] = [
     content: "In the main event of UFC 312, Islam Makhachev successfully defended his Lightweight Championship against a surging Arman Tsarukyan. The bout was a masterclass in elite wrestling and grappling, with Makhachev securing a unanimous decision after five grueling rounds. Despite Tsarukyan’s relentless pressure, Makhachev’s superior counter-striking and ground control proved the difference, extending his winning streak to 15 and fueling talk of a move up to Welterweight.",
     category: "Sports",
     author: "MMA Insider",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/ufc/800/600"
   }
 ];
@@ -214,7 +214,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "In a move that signaling a fundamental shift in American military doctrine, the Pentagon announced today it is fast-tracking $153 billion in new funding for 2026 to modernize the U.S. military with advanced Artificial Intelligence (AI) and autonomous systems. This funding, which was originally slated to be spread over five years, is being \"compressed\" into a single fiscal year to ensure the U.S. maintains a technological edge over China's rapidly advancing \"intelligentized\" warfare capabilities. The Department of Defense report emphasizes that these funds will be poured into AI-driven missile defense, autonomous naval \"ghost fleets,\" and battlefield data-processing tools designed to make split-second decisions. However, the acceleration has sparked a fierce debate in the House Armed Services Committee, where critics argue that such massive, rapid spending bypasses essential oversight and risks deploying lethal autonomous systems before ethical guardrails are fully matured. This \"AI Arms Race\" spending is expected to be a central theme of tonight’s State of the Union address, as the administration frames technological supremacy as the only path to preventing a global conflict.",
     category: "Politics",
     author: "Defense Correspondent",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/pentagon/800/600"
   },
   {
@@ -223,7 +223,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "While the Supreme Court may have struck down President Trump’s original \"Liberation Day\" tariffs on February 20, the White House effectively bypassed that ruling today by triggering Section 122 of the Trade Act of 1974. Starting at midnight, U.S. Customs began collecting a new 10% \"bridge tariff\" on nearly all global imports. This temporary measure is designed to last 150 days, serving as a legal placeholder while the administration attempts to negotiate more permanent trade laws with a reluctant Congress. The move has created absolute chaos in the global markets today; while the President had threatened a 15% rate on social media over the weekend, the actual implementation at 10% has left businesses in a state of \"expensive confusion.\" In London and Tokyo, trade ministers have expressed \"extreme frustration,\" noting that the sudden policy shifts make it nearly impossible for firms to calculate margins for goods currently in transit. This maneuver is being viewed by legal experts as a direct challenge to the Supreme Court’s authority, setting the stage for a constitutional showdown over who truly controls the nation's \"purse strings\" regarding international trade.",
     category: "Economy",
     author: "Trade Analyst",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/tariff/800/600"
   },
   {
@@ -232,7 +232,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "The geopolitical situation in South Asia has reached a boiling point today as UN Deputy Chief Rosemary DiCarlo engaged in a high-stakes phone call with the Taliban’s Foreign Ministry to discuss recent Pakistani airstrikes inside Afghan territory. These strikes, which took place over the weekend in the Nangarhar and Paktika provinces, reportedly killed 13 civilians, according to UN monitors. While Pakistan maintains the strikes were a necessary \"act of self-defense\" targeting TTP (Tehrik-i-Taliban Pakistan) militants who have been launching cross-border attacks, the Taliban government has formally filed a complaint with the UN Security Council, labeling the move a violation of sovereignty. Today, the situation grew even more complex as Iran offered to mediate between the two neighbors, fearing that a full-scale border war would destabilize the entire region and trigger a massive new wave of refugees. The UN is now under intense pressure to intervene before the escalating \"tit-for-tat\" skirmishes lead to a permanent breakdown of the fragile peace in the region.",
     category: "Politics",
     author: "Global Security Desk",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/southasia/800/600"
   },
   {
@@ -241,7 +241,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "In Seoul, the political world is transfixed by the legal battle of ousted President Yoon Suk Yeol, who today officially filed an appeal against his life sentence for the controversial martial law decree of late 2025. The Seoul High Court is now the center of a national divide; supporters of the former president held a massive rally outside the courthouse today, claiming the sentence is \"political revenge,\" while counter-protesters demanded the sentence be upheld to protect the country's democracy. This appeal comes at a time of extreme vulnerability for South Korea, as the current transitional government struggles to manage a slowing economy and a cooling relationship with Washington. The outcome of this case is seen as a litmus test for the independence of the South Korean judiciary and will likely dictate the country’s political stability for the remainder of the decade",
     category: "Politics",
     author: "Seoul Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/seoul/800/600"
   },
   {
@@ -250,7 +250,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "In a significant departure from Nigeria’s historically centralized security architecture, President Bola Tinubu used an interfaith fast gathering today in Abuja to signal a definitive push for the establishment of State Police. Addressing a diverse group of governors and religious leaders, the President emphasized that the current \"dark tunnel of uncertainty\" regarding national security can only be cleared by empowering local levels of government to protect their own citizens. This policy shift comes as a response to years of escalating banditry and kidnapping that have overwhelmed the federal police force. By promising that \"security is the foundation of prosperity,\" Tinubu is attempting to build a bipartisan consensus between Muslim and Christian leaders to support a constitutional amendment that would allow states to manage their own law enforcement. Critics, however, warn that without stringent federal oversight, state-controlled police could become tools for local political intimidation, setting the stage for a fierce legislative battle in the National Assembly over the coming months.",
     category: "Politics",
     author: "Abuja Correspondent",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/nigeria/800/600"
   },
   {
@@ -259,7 +259,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "Japanese Defense Minister Shinjiro Koizumi made a bold diplomatic play today in Tokyo, hosting defense chiefs from 14 Pacific island nations for the Japan Pacific Islands Defense Dialogue. Koizumi’s speech centered on building a \"multilayered network\" to ensure a \"free and open\" Indo-Pacific, explicitly stating that attempts to change the status quo by force—a veiled reference to China’s naval expansion—will not be tolerated. Simultaneously, the Japanese government revealed a strategic pivot toward Europe’s defense market, with high-level delegations currently visiting Finland and Sweden to match Japanese technological expertise with European dual-use military needs. This dual-track strategy marks a historic evolution in Japan’s post-war pacifist stance, as Tokyo seeks to reduce its defense reliance on the United States by becoming a primary security partner for both the Pacific islands and the European Union.",
     category: "Politics",
     author: "Tokyo Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/japan/800/600"
   },
   {
@@ -268,7 +268,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "The diplomatic relationship between Brasília and Washington has reached its lowest point in decades following the recent conviction of former President Jair Bolsonaro for his role in the 2023 attempted coup. Today, as President Luiz Inácio Lula da Silva continues to laud the judiciary for \"fulfilling its role\" in protecting democracy, the administration is simultaneously grappling with the fallout of U.S.-imposed 50% tariffs on Brazilian goods. President Trump has labeled the trial a \"witch hunt\" and a personal attack on his ally, leading to a tit-for-tat economic war that has seen Brazil condemn the use of \"force against our democracy\" via economic coercion. With Lula now confirmed to seek re-election in the 2026 general election to prevent \"troglodytes\" from returning to power, Brazil is pivoting its trade focus toward the BRICS bloc and South Korea to offset the loss of the American market.",
     category: "Politics",
     author: "Brasília Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/brazil/800/600"
   },
   {
@@ -277,7 +277,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "Following the conclusion of the 39th African Union Summit in Addis Ababa, the continent’s leaders today began implementing a landmark \"Health Sovereignty\" framework. With Tanzania’s President Samia Suluhu Hassan designated as the AU Champion for Reproductive and Maternal Health, the initiative seeks to drastically reduce Africa’s dependence on foreign aid and fragile global supply chains. The policy, which was a central pillar of the summit, mandates that member states increase domestic financing for health infrastructure to combat the fact that Sub-Saharan Africa still accounts for 70% of global maternal deaths. This movement toward self-reliance is being framed as a necessary survival tactic in a \"new world order\" where international partners, particularly the U.S., have significantly cut foreign humanitarian aid to prioritize domestic spending.",
     category: "Health",
     author: "Addis Ababa Desk",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/africa/800/600"
   },
   {
@@ -286,7 +286,7 @@ export const STATIC_POLITICAL_NEWS: NewsArticle[] = [
     content: "The political landscape in Manila is currently defined by a high-stakes \"war of attrition\" between the House of Representatives and Vice President Sara Duterte. Today, as a fourth impeachment complaint was endorsed against her by Manila Representative Bienvenido Abante Jr., Duterte countered by officially announcing her 2028 presidential bid. Supporters view the impeachment attempts as a coordinated effort by the \"Lakas-CMD\" bloc to derail her political future, while opponents argue the Vice President is using her early campaign announcement to divert public attention from allegations of fund mismanagement. This domestic turmoil coincides with the Philippines' current ASEAN chairmanship, where the country is leading a critical review of the \"Five-Point Consensus\" on Myanmar, leaving many to wonder if the internal political infighting will diminish the Philippines' ability to lead on the regional stage.",
     category: "Politics",
     author: "Manila Bureau",
-    date: "Feb 24, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/manila/800/600"
   }
 ];
@@ -298,7 +298,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "New research from major travel platforms shows that in 2026, the \"six-pack\" has been replaced by the \"booked getaway\" as the ultimate romantic gesture. In India, confirmed holiday bookings have become a primary expression of love, with couples prioritizing experiential escapes over traditional gifts. This shift emphasizes shared memories and \"destination dating\" as the core of modern relationships.",
     category: "Lifestyle",
     author: "Travel Desk",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/romance/800/600"
   },
   {
@@ -307,7 +307,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "The fitness world is officially moving away from \"no pain, no gain\" culture. Today's wellness experts are highlighting Load Management, which focuses on how much physical and mental stress the body can handle before requiring recovery. Instead of pushing through exhaustion, the 2026 trend favors \"pain-aware movement\" and nervous system regulation to build long-term resilience.",
     category: "Lifestyle",
     author: "Wellness Bureau",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/fitness/800/600"
   },
   {
@@ -316,7 +316,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "A new aesthetic is dominating home décor: Scanditalia. This trend blends the functional, clean silhouettes of Scandinavian design with the bold, expressive textures of Italian style. Expect to see homes featuring warm palettes, sculptural furniture, and rich materials like reeded wood and fluted glass, creating spaces that are both serene and high-drama.",
     category: "Lifestyle",
     author: "Design Desk",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/interior/800/600"
   },
   {
@@ -325,7 +325,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "In major medical news today, researchers have reported a successful reversal of Type 2 Diabetes in patients using stem cell therapy. The treatment focuses on restoring the body's natural insulin production, offering a potential future where patients are no longer dependent on lifelong medication. This marks a massive leap in regenerative medicine for lifestyle-related diseases.",
     category: "Lifestyle",
     author: "Medical Bureau",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/diabetes/800/600"
   },
   {
@@ -334,7 +334,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "The health coaching market is projected to skyrocket this year as AI-enabled tools become mainstream. Unlike basic fitness trackers, these new AI coaches provide real-time, personalized advice based on metabolic data and stress levels. They are being integrated into corporate wellness programs to help employees manage \"digital fatigue\" and prevent burnout before it happens.",
     category: "Lifestyle",
     author: "Tech Lifestyle",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/aicoach/800/600"
   },
   {
@@ -343,7 +343,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "As AI becomes more integrated into work, people are seeking \"Analog Affection\" in their personal lives. Hobbies like ceramics, film photography, and hand-knitting are seeing a massive resurgence. These activities are being embraced as \"quiet acts of resistance,\" where the goal is to create something imperfect and tangible in an increasingly digital world.",
     category: "Lifestyle",
     author: "Culture Desk",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/analog/800/600"
   },
   {
@@ -352,7 +352,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "New clinical studies released today emphasize the cardiovascular benefits of pomegranate juice. Drinking it daily has been linked to improved blood flow and arterial health. Nutritionists are also recommending \"sprinkling cinnamon on fruits\" to help with blood sugar control, highlighting a return to simple, functional whole foods over complex supplements.",
     category: "Lifestyle",
     author: "Nutrition Bureau",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/pomegranate/800/600"
   },
   {
@@ -361,7 +361,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "Forget the \"home office\"—2026 is the year of the \"Players Only\" room. Interior designers are seeing a surge in requests for dedicated game parlors featuring mahjong tables, poker setups, and family shuffleboards. This trend reflects a post-digital desire for communal, face-to-face entertainment within the comfort of the home.",
     category: "Lifestyle",
     author: "Home Bureau",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/gameparlor/800/600"
   },
   {
@@ -370,7 +370,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "Wedding fashion for 2026 is moving toward Soft Power Dressing. Brides are moving away from heavy, restrictive traditional wear in favor of fluid, drape-led couture that honors Indian craftsmanship through lighter, sustainable fabrics. This \"Fluid Grandeur\" focuses on comfort and movement, allowing the wearer to feel both powerful and unburdened.",
     category: "Lifestyle",
     author: "Fashion Desk",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/fashion/800/600"
   },
   {
@@ -379,7 +379,7 @@ const STATIC_LIFESTYLE_NEWS: NewsArticle[] = [
     content: "\"Mental health\" is expanding to include Nervous System Regulation. Today's top wellness routines prioritize \"vagus nerve\" exercises, box breathing, and slow-motion stretching. The goal is to move the body out of a \"fight or flight\" state caused by constant notifications and into a \"rest and digest\" state, treating the nervous system as the foundation of overall health",
     category: "Lifestyle",
     author: "Health Bureau",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/mentalhealth/800/600"
   }
 ];
@@ -391,7 +391,7 @@ const FALLBACK_NEWS: NewsArticle[] = [
     content: "Leading scientists and tech giants gathered today to unveil a revolutionary solid-state battery technology that promises to triple the range of electric vehicles while reducing charging times to under five minutes. The breakthrough, a result of a decade-long international collaboration, uses recycled materials and significantly reduces the environmental footprint of battery production. Industry experts predict this could accelerate the transition to renewable energy by several years, making green transportation accessible to millions more people worldwide.",
     category: "Technology",
     author: "Sarah Jenkins",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/tech1/800/600"
   },
   {
@@ -400,7 +400,7 @@ const FALLBACK_NEWS: NewsArticle[] = [
     content: "In a historic move, over 190 nations have signed a comprehensive treaty to establish vast marine protected areas in international waters. The agreement provides a legal framework for conservation in the 'High Seas,' which cover nearly half the Earth's surface but have previously been largely unregulated. Marine biologists hailed the treaty as a 'turning point' for biodiversity, noting that it will help protect endangered species, restore depleted fish stocks, and enhance the ocean's ability to absorb carbon dioxide from the atmosphere.",
     category: "Politics",
     author: "Michael Chen",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/ocean1/800/600"
   },
   {
@@ -409,7 +409,7 @@ const FALLBACK_NEWS: NewsArticle[] = [
     content: "A comprehensive study of 5,000 global companies reveals that the hybrid work model has officially surpassed both fully remote and fully in-office setups as the preferred choice for employees and employers alike. The report highlights that flexibility is now the top priority for job seekers, leading to a significant shift in urban planning and commercial real estate. Cities are beginning to adapt by converting vacant office spaces into residential units and community hubs, reflecting a permanent change in how society balances professional and personal life.",
     category: "Lifestyle",
     author: "Elena Rodriguez",
-    date: "Feb 23, 2026",
+    date: "April 6, 2026",
     imageUrl: "https://picsum.photos/seed/work1/800/600"
   }
 ];
@@ -555,7 +555,7 @@ export const geminiService = {
         model: "gemini-3-flash-preview",
         contents: `Search for the 5 most recent and relevant news for the category: ${category}. 
         Focus on events happening right now or in the last 24 hours.
-        Return them as a JSON array of objects with: id, title, content (around 100 words), category, author, date, and a descriptive imageUrl placeholder (e.g., https://picsum.photos/seed/news1/800/600).`,
+        Return them as a JSON array of objects with: id, title, content (around 100 words), category, author, date (set this to "April 6, 2026"), and a descriptive imageUrl placeholder (e.g., https://picsum.photos/seed/news1/800/600).`,
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -908,7 +908,7 @@ export const geminiService = {
     return STATIC_NEWS;
   },
 
-  async analyzeNewsImage(base64Image: string, mimeType: string): Promise<{ score: number; reasoning: string; sources: string[] }> {
+  async analyzeNewsImage(base64Image: string, mimeType: string): Promise<{ score: number; reasoning: string; sources: string[]; isNewsImage: boolean }> {
     return withRetry(async () => {
       const response = await ai.models.generateContent({
         model: "gemini-3.1-pro-preview",
@@ -920,7 +920,12 @@ export const geminiService = {
             },
           },
           {
-            text: "Analyze this image of a news article or headline. Verify its authenticity by cross-referencing with current global news using Google Search. Determine if it is real or fake news. Provide an authenticity score (0-100), reasoning, and list verified sources.",
+            text: `Analyze this image. 
+            Step 1: Determine if this image is a news article, a news headline, a news website screenshot, or any news-related content. Set 'isNewsImage' to true if it is, and false otherwise.
+            Step 2: If it IS news-related, verify its authenticity by cross-referencing the specific claims, dates, and entities mentioned in the image with current global news using Google Search. 
+            Step 3: Be extremely careful and objective. Many real news articles might seem sensational but are true. Cross-reference with reliable news sources (e.g., Reuters, AP, BBC, etc.). 
+            Step 4: Provide an authenticity score (0-100), where 100 is definitely real and 0 is definitely fake. 
+            Step 5: Provide detailed reasoning explaining why it's real or fake, and list the verified sources you found.`,
           },
         ],
         config: {
@@ -929,11 +934,12 @@ export const geminiService = {
           responseSchema: {
             type: Type.OBJECT,
             properties: {
+              isNewsImage: { type: Type.BOOLEAN, description: "Whether the image is news-related content" },
               score: { type: Type.NUMBER, description: "Authenticity score from 0 to 100" },
               reasoning: { type: Type.STRING },
               sources: { type: Type.ARRAY, items: { type: Type.STRING } },
             },
-            required: ["score", "reasoning", "sources"],
+            required: ["isNewsImage", "score", "reasoning", "sources"],
           },
         },
       });
@@ -941,7 +947,7 @@ export const geminiService = {
       try {
         return JSON.parse(response.text || "{}");
       } catch (e) {
-        return { score: 50, reasoning: "Image analysis failed.", sources: [] };
+        return { isNewsImage: true, score: 50, reasoning: "Image analysis failed.", sources: [] };
       }
     });
   }

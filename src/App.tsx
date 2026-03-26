@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
+import { toast, Toaster } from 'sonner';
 import { geminiService, NewsArticle } from './services/geminiService';
 import { cn } from './lib/utils';
 import { VoiceAssistant } from './components/VoiceAssistant';
@@ -781,10 +782,22 @@ const FakeNewsDetector = () => {
       const [mimePart, base64Part] = imagePreview.split(',');
       const mimeType = mimePart.match(/:(.*?);/)?.[1] || 'image/jpeg';
       const data = await geminiService.analyzeNewsImage(base64Part, mimeType);
-      setResult(data);
+      
+      if (!data.isNewsImage) {
+        toast.error("Invalid Image", {
+          description: "The uploaded image is not a news-based image. Please upload a news article or headline.",
+          duration: 5000,
+        });
+        setResult(null);
+      } else {
+        setResult(data);
+      }
     } catch (error) {
       console.error("Analysis failed", error);
-      setResult({ score: 0, reasoning: "Error analyzing image. Please try again.", sources: [] });
+      setResult({ score: 0, reasoning: "Error analyzing image. Please try again.", sources: [], isNewsImage: true });
+      toast.error("Analysis Failed", {
+        description: "Something went wrong while analyzing the image. Please try again.",
+      });
     } finally {
       setIsAnalyzing(false);
     }
@@ -909,7 +922,7 @@ const FakeNewsDetector = () => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 className={cn(
                   "rounded-[2.5rem] p-8 border-2 shadow-2xl relative overflow-hidden",
-                  result.score > 70 
+                  result.score > 50 
                     ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
                     : "bg-rose-500/10 border-rose-500/20 text-rose-400"
                 )}
@@ -917,7 +930,7 @@ const FakeNewsDetector = () => {
                 {/* Result Glow */}
                 <div className={cn(
                   "absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-30",
-                  result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
+                  result.score > 50 ? "bg-emerald-500" : "bg-rose-500"
                 )}></div>
 
                 <div className="relative z-10">
@@ -925,7 +938,7 @@ const FakeNewsDetector = () => {
                     <div className="space-y-1">
                       <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Verification Result</span>
                       <h3 className="text-4xl font-black tracking-tighter">
-                        {result.score > 70 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
+                        {result.score > 50 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
                       </h3>
                     </div>
                     <div className="text-right">
@@ -941,7 +954,7 @@ const FakeNewsDetector = () => {
                       transition={{ duration: 1.5, ease: "easeOut" }}
                       className={cn(
                         "h-full rounded-full shadow-[0_0_20px_rgba(0,0,0,0.3)]",
-                        result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
+                        result.score > 50 ? "bg-emerald-500" : "bg-rose-500"
                       )} 
                     ></motion.div>
                   </div>
@@ -2197,6 +2210,7 @@ export default function App() {
           <VoiceAssistant />
         </>
       )}
+      <Toaster position="top-center" richColors />
     </div>
   );
 }
