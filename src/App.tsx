@@ -829,11 +829,11 @@ const FakeNewsDetector = () => {
           id: toastId,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Analysis failed", error);
       setResult(null);
       toast.error("Analysis Failed", {
-        description: "Something went wrong while analyzing the image. Please try again.",
+        description: error.message || "Something went wrong while analyzing the image. Please try again.",
         id: toastId,
       });
     } finally {

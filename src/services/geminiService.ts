@@ -923,9 +923,12 @@ export const geminiService = {
   },
 
   async analyzeNewsImage(base64Image: string, mimeType: string): Promise<{ score: number; reasoning: string; sources: string[]; isNewsImage: boolean }> {
+    if (!API_KEY) {
+      throw new Error("Gemini API Key is missing. Please set VITE_GEMINI_API_KEY in your environment variables.");
+    }
     return withRetry(async () => {
       const response = await ai.models.generateContent({
-        model: "gemini-3.1-pro-preview",
+        model: "gemini-3-flash-preview",
         contents: [
           {
             inlineData: {
