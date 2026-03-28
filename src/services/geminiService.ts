@@ -791,8 +791,22 @@ export const geminiService = {
     return withRetry(async () => {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `Analyze the following news text for authenticity. Check for sensationalism, logical fallacies, and verify against known facts. 
-        Text: ${text}`,
+        contents: `Perform a comprehensive authenticity analysis on the following news text.
+        
+        Step 1: Linguistic Analysis:
+        - Check for sensationalism, clickbait tactics, and emotional manipulation.
+        - Identify logical fallacies or inconsistent arguments.
+        
+        Step 2: Fact-Checking (Google Search):
+        - Verify the core claims, dates, and entities against real-time global news data.
+        - Cross-reference with multiple reputable news agencies (Reuters, AP, BBC, etc.).
+        
+        Step 3: Final Verdict:
+        - Provide an authenticity score (0-100). 100 = definitely real, 0 = definitely fake.
+        - Provide a detailed, objective reasoning for your conclusion.
+        - List the specific sources used for verification.
+        
+        Text to analyze: ${text}`,
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -911,7 +925,7 @@ export const geminiService = {
   async analyzeNewsImage(base64Image: string, mimeType: string): Promise<{ score: number; reasoning: string; sources: string[]; isNewsImage: boolean }> {
     return withRetry(async () => {
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-3.1-pro-preview",
         contents: [
           {
             inlineData: {
@@ -920,13 +934,25 @@ export const geminiService = {
             },
           },
           {
-            text: `Analyze this image thoroughly. 
-            Step 1: Identify if this image contains news-related content (headlines, articles, news reports, news website screenshots). Set 'isNewsImage' to true only if it is clearly news-related. If it's a random photo, personal image, or non-news content, set it to false.
-            Step 2: If it IS news-related, perform a deep verification of the claims, dates, and entities mentioned in the image using Google Search. 
-            Step 3: Compare the information with multiple reputable global news outlets (e.g., Reuters, AP, BBC, New York Times, etc.). 
-            Step 4: Determine an authenticity score from 0 to 100 (100 = definitely real, 0 = definitely fake). 
-            Step 5: Provide a detailed, objective reasoning for your conclusion. If it's real, explain why and mention the confirming sources. If it's fake, point out the discrepancies.
-            Step 6: List the specific URLs or names of the sources used for verification.`,
+            text: `Perform a deep forensic and pattern analysis on this image to detect if it's real or fake news.
+            
+            Step 1: Visual Pattern Analysis:
+            - Look for AI generation artifacts (distorted text, unnatural textures, inconsistent lighting).
+            - Check for signs of digital manipulation (cloning, poor blending, font mismatches).
+            - Analyze the image quality and metadata/watermark consistency if visible.
+            
+            Step 2: Content Identification:
+            - Determine if this is a news article, headline, report, or news site screenshot.
+            - Set 'isNewsImage' to true only if it's clearly news-related.
+            
+            Step 3: Fact-Checking (Google Search):
+            - If it IS news-related, perform a deep verification of the specific claims, dates, and entities mentioned.
+            - Cross-reference with multiple reputable global news outlets (Reuters, AP, BBC, NYT, etc.).
+            
+            Step 4: Final Verdict:
+            - Provide an authenticity score (0-100). 100 = definitely real, 0 = definitely fake.
+            - Provide a detailed, objective reasoning explaining both the visual pattern findings and the factual verification results.
+            - List the specific sources used for verification.`,
           },
         ],
         config: {
@@ -947,7 +973,6 @@ export const geminiService = {
 
       try {
         const result = JSON.parse(response.text || "{}");
-        // Ensure score is a number and within bounds
         if (typeof result.score !== 'number') result.score = 50;
         result.score = Math.max(0, Math.min(100, result.score));
         return result;
