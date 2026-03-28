@@ -205,11 +205,12 @@ const LoginPage = ({ onLogin }: { onLogin: (name: string, email: string) => void
   );
 };
 
-const Navbar = ({ activePage, setActivePage, onSearch, user, onSignOut }: { activePage: string, setActivePage: (p: string) => void, onSearch: (q: string) => void, user: { name: string, email: string } | null, onSignOut: () => void }) => {
+const Navbar = ({ activePage, setActivePage, onSearch, user, onSignOut, region, setRegion }: { activePage: string, setActivePage: (p: string) => void, onSearch: (q: string) => void, user: { name: string, email: string } | null, onSignOut: () => void, region: string, setRegion: (r: string) => void }) => {
   const navItems = ['Home', 'General News', 'Sports', 'Politics', 'Lifestyle'];
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isEditionOpen, setIsEditionOpen] = useState(false);
   
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -220,15 +221,58 @@ const Navbar = ({ activePage, setActivePage, onSearch, user, onSignOut }: { acti
     }
   };
 
+  const editions = ['Global', 'Tamil Nadu', 'Karnataka', 'Kerala'];
+
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-8">
-            <div className="flex items-center cursor-pointer" onClick={() => setActivePage('Home')}>
-              <span className="text-xl font-bold tracking-tighter flex items-center">
-                AI NEWS <span className="text-brand-orange ml-1">WORLD</span>
-              </span>
+            <div className="flex items-center gap-4">
+              {/* Edition Selector */}
+              <div className="relative">
+                <button 
+                  onClick={() => setIsEditionOpen(!isEditionOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors border border-gray-100"
+                >
+                  <Globe className="w-3.5 h-3.5 text-brand-orange" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-dark">{region}</span>
+                  <ChevronDown className={cn("w-3 h-3 text-gray-400 transition-transform", isEditionOpen && "rotate-180")} />
+                </button>
+
+                <AnimatePresence>
+                  {isEditionOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl p-2 z-[60]"
+                    >
+                      {editions.map((e) => (
+                        <button
+                          key={e}
+                          onClick={() => {
+                            setRegion(e);
+                            setIsEditionOpen(false);
+                          }}
+                          className={cn(
+                            "w-full text-left px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors",
+                            region === e ? "bg-brand-orange text-white" : "text-gray-600 hover:bg-gray-50"
+                          )}
+                        >
+                          {e}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="flex items-center cursor-pointer" onClick={() => setActivePage('Home')}>
+                <span className="text-xl font-bold tracking-tighter flex items-center">
+                  AI NEWS <span className="text-brand-orange ml-1">WORLD</span>
+                </span>
+              </div>
             </div>
             <div className="hidden md:flex items-center space-x-6">
               {navItems.map((item) => (
@@ -327,25 +371,10 @@ const Navbar = ({ activePage, setActivePage, onSearch, user, onSignOut }: { acti
   );
 };
 
-const UpdateBar = ({ onRefresh, loading, region, setRegion }: { onRefresh: () => void, loading: boolean, region: string, setRegion: (r: string) => void }) => {
+const UpdateBar = ({ onRefresh, loading }: { onRefresh: () => void, loading: boolean }) => {
   return (
     <div className="bg-white py-3 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-brand-orange" />
-          <span className="text-[10px] font-bold uppercase text-gray-400">Edition:</span>
-          <select 
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            className="text-[10px] font-bold uppercase bg-transparent border-none focus:ring-0 cursor-pointer text-brand-dark"
-          >
-            <option value="Global">Global</option>
-            <option value="Tamil Nadu">Tamil Nadu</option>
-            <option value="Karnataka">Karnataka</option>
-            <option value="Kerala">Kerala</option>
-          </select>
-        </div>
-        
         <div className="flex items-center gap-4">
           <button 
             onClick={onRefresh}
@@ -2125,8 +2154,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    // On page or region change, try to load from cache
-    // But don't trigger a network request automatically
     if (!isLoggedIn) return;
     if (activePage.startsWith('Search:')) return;
 
@@ -2138,8 +2165,11 @@ export default function App() {
       setNews(cached);
       setLoading(false);
       setError(null);
+    } else if (region !== 'Global') {
+      // If it's a specific region and not cached, fetch it automatically
+      loadNews();
     } else {
-      // If no cache, load the default stored news for the category
+      // If Global and no cache, load the default stored news
       const stored = geminiService.getStoredNews(category);
       setNews(stored);
       setLoading(false);
@@ -2153,8 +2183,8 @@ export default function App() {
         <LoginPage onLogin={handleLogin} />
       ) : (
         <>
-          <Navbar activePage={activePage} setActivePage={setActivePage} onSearch={handleSearch} user={user} onSignOut={handleSignOut} />
-          <UpdateBar onRefresh={() => loadNews(true)} loading={loading} region={region} setRegion={setRegion} />
+          <Navbar activePage={activePage} setActivePage={setActivePage} onSearch={handleSearch} user={user} onSignOut={handleSignOut} region={region} setRegion={setRegion} />
+          <UpdateBar onRefresh={() => loadNews(true)} loading={loading} />
           <BreakingNews />
           
           <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
