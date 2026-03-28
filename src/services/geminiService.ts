@@ -911,7 +911,7 @@ export const geminiService = {
   async analyzeNewsImage(base64Image: string, mimeType: string): Promise<{ score: number; reasoning: string; sources: string[]; isNewsImage: boolean }> {
     return withRetry(async () => {
       const response = await ai.models.generateContent({
-        model: "gemini-3.1-pro-preview",
+        model: "gemini-3-flash-preview",
         contents: [
           {
             inlineData: {
@@ -920,12 +920,13 @@ export const geminiService = {
             },
           },
           {
-            text: `Analyze this image. 
-            Step 1: Determine if this image is a news article, a news headline, a news website screenshot, or any news-related content. Set 'isNewsImage' to true if it is, and false otherwise.
-            Step 2: If it IS news-related, verify its authenticity by cross-referencing the specific claims, dates, and entities mentioned in the image with current global news using Google Search. 
-            Step 3: Be extremely careful and objective. Many real news articles might seem sensational but are true. Cross-reference with reliable news sources (e.g., Reuters, AP, BBC, etc.). 
-            Step 4: Provide an authenticity score (0-100), where 100 is definitely real and 0 is definitely fake. 
-            Step 5: Provide detailed reasoning explaining why it's real or fake, and list the verified sources you found.`,
+            text: `Analyze this image thoroughly. 
+            Step 1: Identify if this image contains news-related content (headlines, articles, news reports, news website screenshots). Set 'isNewsImage' to true only if it is clearly news-related. If it's a random photo, personal image, or non-news content, set it to false.
+            Step 2: If it IS news-related, perform a deep verification of the claims, dates, and entities mentioned in the image using Google Search. 
+            Step 3: Compare the information with multiple reputable global news outlets (e.g., Reuters, AP, BBC, New York Times, etc.). 
+            Step 4: Determine an authenticity score from 0 to 100 (100 = definitely real, 0 = definitely fake). 
+            Step 5: Provide a detailed, objective reasoning for your conclusion. If it's real, explain why and mention the confirming sources. If it's fake, point out the discrepancies.
+            Step 6: List the specific URLs or names of the sources used for verification.`,
           },
         ],
         config: {
@@ -945,9 +946,14 @@ export const geminiService = {
       });
 
       try {
-        return JSON.parse(response.text || "{}");
+        const result = JSON.parse(response.text || "{}");
+        // Ensure score is a number and within bounds
+        if (typeof result.score !== 'number') result.score = 50;
+        result.score = Math.max(0, Math.min(100, result.score));
+        return result;
       } catch (e) {
-        return { isNewsImage: true, score: 50, reasoning: "Image analysis failed.", sources: [] };
+        console.error("Failed to parse analysis result", e);
+        return { isNewsImage: true, score: 50, reasoning: "Analysis completed but result parsing failed. Please try again.", sources: [] };
       }
     });
   }

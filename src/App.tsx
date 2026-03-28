@@ -736,7 +736,7 @@ const ArticleCard = ({ article }: { article: NewsArticle }) => {
                   "font-black uppercase text-sm tracking-tight",
                   authData.score > 70 ? "text-green-600" : "text-red-600"
                 )}>
-                  {authData.score > 70 ? "IT IS REAL" : "IT IS FAKE"}
+                  {authData.score > 70 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
                 </span>
               </div>
               <p className={cn(
@@ -807,6 +807,9 @@ const FakeNewsDetector = () => {
   const handleScan = async () => {
     if (!imagePreview) return;
     setIsAnalyzing(true);
+    const toastId = toast.loading("Analyzing image Authenticity...", {
+      description: "Our AI is cross-referencing global news sources. This may take a moment.",
+    });
     try {
       const [mimePart, base64Part] = imagePreview.split(',');
       const mimeType = mimePart.match(/:(.*?);/)?.[1] || 'image/jpeg';
@@ -816,16 +819,22 @@ const FakeNewsDetector = () => {
         toast.error("Invalid Image", {
           description: "The uploaded image is not a news-based image. Please upload a news article or headline.",
           duration: 5000,
+          id: toastId,
         });
         setResult(null);
       } else {
         setResult(data);
+        toast.success("Analysis Complete", {
+          description: data.score > 70 ? "This news appears to be authentic." : "Caution: This news may be misleading or fake.",
+          id: toastId,
+        });
       }
     } catch (error) {
       console.error("Analysis failed", error);
       setResult({ score: 0, reasoning: "Error analyzing image. Please try again.", sources: [], isNewsImage: true });
       toast.error("Analysis Failed", {
         description: "Something went wrong while analyzing the image. Please try again.",
+        id: toastId,
       });
     } finally {
       setIsAnalyzing(false);
@@ -951,7 +960,7 @@ const FakeNewsDetector = () => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 className={cn(
                   "rounded-[2.5rem] p-8 border-2 shadow-2xl relative overflow-hidden",
-                  result.score > 50 
+                  result.score > 70 
                     ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
                     : "bg-rose-500/10 border-rose-500/20 text-rose-400"
                 )}
@@ -959,7 +968,7 @@ const FakeNewsDetector = () => {
                 {/* Result Glow */}
                 <div className={cn(
                   "absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-30",
-                  result.score > 50 ? "bg-emerald-500" : "bg-rose-500"
+                  result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
                 )}></div>
 
                 <div className="relative z-10">
@@ -967,7 +976,7 @@ const FakeNewsDetector = () => {
                     <div className="space-y-1">
                       <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Verification Result</span>
                       <h3 className="text-4xl font-black tracking-tighter">
-                        {result.score > 50 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
+                        {result.score > 70 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
                       </h3>
                     </div>
                     <div className="text-right">
@@ -983,7 +992,7 @@ const FakeNewsDetector = () => {
                       transition={{ duration: 1.5, ease: "easeOut" }}
                       className={cn(
                         "h-full rounded-full shadow-[0_0_20px_rgba(0,0,0,0.3)]",
-                        result.score > 50 ? "bg-emerald-500" : "bg-rose-500"
+                        result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
                       )} 
                     ></motion.div>
                   </div>
