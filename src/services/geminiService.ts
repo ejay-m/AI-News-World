@@ -934,25 +934,28 @@ export const geminiService = {
             },
           },
           {
-            text: `Perform a deep forensic and pattern analysis on this image to detect if it's real or fake news.
+            text: `Analyze this image with extreme objectivity to determine if it is real or fake news. 
             
-            Step 1: Visual Pattern Analysis:
-            - Look for AI generation artifacts (distorted text, unnatural textures, inconsistent lighting).
-            - Check for signs of digital manipulation (cloning, poor blending, font mismatches).
-            - Analyze the image quality and metadata/watermark consistency if visible.
+            CRITICAL INSTRUCTION: Do not label news as "fake" simply because of low image quality, compression artifacts, or if it's a screenshot. Many real news reports are shared as low-quality screenshots. Only label as "fake" if you find definitive evidence of manipulation or if the claims are factually disproven.
+
+            Step 1: Visual Forensic Analysis:
+            - Check for clear signs of digital tampering (e.g., mismatched fonts in headlines, poorly photoshopped elements, inconsistent lighting on subjects).
+            - Identify if the image is a screenshot of a reputable news site (BBC, CNN, Reuters, etc.). If it looks like a standard, unmodified screenshot of a known site, treat it as highly likely to be real unless the content is known to be a parody or fabricated.
             
             Step 2: Content Identification:
-            - Determine if this is a news article, headline, report, or news site screenshot.
-            - Set 'isNewsImage' to true only if it's clearly news-related.
+            - Is this a news article, headline, or report? Set 'isNewsImage' to true if it is.
             
             Step 3: Fact-Checking (Google Search):
-            - If it IS news-related, perform a deep verification of the specific claims, dates, and entities mentioned.
-            - Cross-reference with multiple reputable global news outlets (Reuters, AP, BBC, NYT, etc.).
+            - Search for the specific headlines, events, or quotes mentioned in the image.
+            - Verify if reputable news organizations have reported on this exact story.
             
-            Step 4: Final Verdict:
-            - Provide an authenticity score (0-100). 100 = definitely real, 0 = definitely fake.
-            - Provide a detailed, objective reasoning explaining both the visual pattern findings and the factual verification results.
-            - List the specific sources used for verification.`,
+            Step 4: Verdict:
+            - Provide an authenticity score (0-100). 
+              * 80-100: Confirmed Real (reported by multiple reputable sources).
+              * 50-79: Likely Real or Unverified (no evidence of fakery, but maybe niche news).
+              * 0-49: Likely Fake or Manipulated (clear evidence of tampering or factually false).
+            - Provide a detailed reasoning. If it's real, explain why (e.g., "Matches BBC reporting from [Date]"). If it's fake, point out the specific error.
+            - List the sources found.`,
           },
         ],
         config: {

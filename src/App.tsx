@@ -725,7 +725,7 @@ const ArticleCard = ({ article }: { article: NewsArticle }) => {
               animate={{ opacity: 1, height: 'auto' }}
               className={cn(
                 "p-3 rounded-xl border text-[10px] font-medium leading-relaxed mb-2",
-                authData.score > 70 ? "bg-green-50 border-green-100 text-green-800" : "bg-red-50 border-red-100 text-red-800"
+                authData.score >= 50 ? "bg-green-50 border-green-100 text-green-800" : "bg-red-50 border-red-100 text-red-800"
               )}
             >
               <div className="flex items-center justify-between mb-2">
@@ -734,14 +734,14 @@ const ArticleCard = ({ article }: { article: NewsArticle }) => {
                 </span>
                 <span className={cn(
                   "font-black uppercase text-sm tracking-tight",
-                  authData.score > 70 ? "text-green-600" : "text-red-600"
+                  authData.score >= 50 ? "text-green-600" : "text-red-600"
                 )}>
-                  {authData.score > 70 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
+                  {authData.score >= 50 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
                 </span>
               </div>
               <p className={cn(
                 "line-clamp-2 mb-2 font-bold",
-                authData.score > 70 ? "text-green-700" : "text-red-700"
+                authData.score >= 50 ? "text-green-700" : "text-red-700"
               )}>
                 {authData.reasoning}
               </p>
@@ -825,13 +825,13 @@ const FakeNewsDetector = () => {
       } else {
         setResult(data);
         toast.success("Analysis Complete", {
-          description: data.score > 70 ? "This news appears to be authentic." : "Caution: This news may be misleading or fake.",
+          description: data.score >= 50 ? "This news appears to be authentic." : "Caution: This news may be misleading or fake.",
           id: toastId,
         });
       }
     } catch (error) {
       console.error("Analysis failed", error);
-      setResult({ score: 0, reasoning: "Error analyzing image. Please try again.", sources: [], isNewsImage: true });
+      setResult(null);
       toast.error("Analysis Failed", {
         description: "Something went wrong while analyzing the image. Please try again.",
         id: toastId,
@@ -960,7 +960,7 @@ const FakeNewsDetector = () => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 className={cn(
                   "rounded-[2.5rem] p-8 border-2 shadow-2xl relative overflow-hidden",
-                  result.score > 70 
+                  result.score >= 50 
                     ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
                     : "bg-rose-500/10 border-rose-500/20 text-rose-400"
                 )}
@@ -968,7 +968,7 @@ const FakeNewsDetector = () => {
                 {/* Result Glow */}
                 <div className={cn(
                   "absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-30",
-                  result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
+                  result.score >= 50 ? "bg-emerald-500" : "bg-rose-500"
                 )}></div>
 
                 <div className="relative z-10">
@@ -976,7 +976,7 @@ const FakeNewsDetector = () => {
                     <div className="space-y-1">
                       <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Verification Result</span>
                       <h3 className="text-4xl font-black tracking-tighter">
-                        {result.score > 70 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
+                        {result.score >= 50 ? "IT IS REAL NEWS" : "IT IS FAKE NEWS"}
                       </h3>
                     </div>
                     <div className="text-right">
@@ -992,7 +992,7 @@ const FakeNewsDetector = () => {
                       transition={{ duration: 1.5, ease: "easeOut" }}
                       className={cn(
                         "h-full rounded-full shadow-[0_0_20px_rgba(0,0,0,0.3)]",
-                        result.score > 70 ? "bg-emerald-500" : "bg-rose-500"
+                        result.score >= 50 ? "bg-emerald-500" : "bg-rose-500"
                       )} 
                     ></motion.div>
                   </div>
@@ -2174,11 +2174,8 @@ export default function App() {
       setNews(cached);
       setLoading(false);
       setError(null);
-    } else if (region !== 'Global') {
-      // If it's a specific region and not cached, fetch it automatically
-      loadNews();
     } else {
-      // If Global and no cache, load the default stored news
+      // If no cache, load the default stored news
       const stored = geminiService.getStoredNews(category);
       setNews(stored);
       setLoading(false);
